@@ -11,5 +11,3 @@ but the overall implementation will have to be different
 
 Hopefully we'll be able to do this bit by bit and finish 
 it before the deadline
-
-ur mom gay
