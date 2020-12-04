@@ -1,4 +1,5 @@
 <template>
+    <div id="signup">
 		<img src="../assets/finallogo.png" id="logo" alt="logo">
         <h1>S I G N U P</h1>
         <div class="login_bx">
@@ -9,7 +10,6 @@
                 <option value="Doctor">Doctor</option>
             </select><br>
             <form>
-                <label>Email</label>
                 <input type="email" class="login_inp" name="email" v-model="input.email" placeholder="Email" required /><br>
                 <input type="text" class="login_inp" name="username" v-model="input.username" placeholder="Username" required /><br>
                 <input type="text" class="login_inp" name="address" v-model="input.address" placeholder="Address" required /><br>
@@ -19,6 +19,7 @@
             </form>
             <p>Alreayd have an account? <router-link to='/login'>Login here !</router-link></p>
         </div>
+    </div>
 </template>
 
 <script>
@@ -39,25 +40,25 @@ export default {
     methods: {
         signup() {
             if(this.input.username != "" && this.input.password != "" && this.input.email != "" && this.input.address != "" && this.input.rep_pass != "" && this.input.type != "") {
-                if(this.input.password.length >= 8) {
-                    if(this.input.password == this.input.rep_pass && this.input.type === "Patient") {
+                if(this.input.password.length >= 8 && this.input.password == this.input.rep_pass) {
+                    if(this.input.type === "Patient") {
                         this.$router.replace({ name: "Login" });
-                    } else if (this.input.password == this.input.rep_pass && this.input.type === "Doctor") {
+                    } else if (this.input.type === "Doctor") {
                         this.$router.replace({ name: "DocVerify" });
-                    } else {
-                        alert("Password and repeat password should match. Please try again");
-                        return false;
-                    }
+                    } 
+                } else {
+                    alert("Password and repeat password should match. Please try again");
+                    this.$router.replace({ name: "Signup" });
                 }
             } else {
                 alert("Please fill out all required details");
-                this.input.email = "";
-                this.input.username = "";
-                this.input.address = "";
-                this.input.password = "";
-                this.input.rep_pass = "";
-                this.input.type = "";
-                return false;
+                // this.input.email = "";
+                // this.input.username = "";
+                // this.input.address = "";
+                // this.input.password = "";
+                // this.input.rep_pass = "";
+                // this.input.type = "";
+                this.$router.replace({ name: "Signup" });
             }
         }
     }
@@ -103,5 +104,11 @@ img {
     margin-bottom: 5%;
     margin-top: 3%;
     cursor: pointer;
+}
+a {
+    color:darkblue;
+}
+a:active {
+    color: red;
 }
 </style>
