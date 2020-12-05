@@ -14,10 +14,10 @@
                 <input type="text" class="login_inp" name="username" v-model="input.username" placeholder="Username" required /><br>
                 <input type="text" class="login_inp" name="address" v-model="input.address" placeholder="Address" required /><br>
                 <input type="password" class="login_inp" name="password" v-model="input.password" placeholder="Password" minlength="8" required /><br>
-                <input type="password" class="login_inp" name="rep_pass" v-model="input.rep_pass" placeholder="Repeat Password" minlength="8" required /><br>
+                <input type="password" class="login_inp" name="rep_pass" v-model="input.rep_pass" placeholder="Confirm Password" minlength="8" required /><br>
                 <input type="submit" class="login_sub" @click="signup()" value="Sign Up">
             </form>
-            <p>Alreayd have an account? <router-link to='/login'>Login here !</router-link></p>
+            <p>Already have an account? <router-link to='/login'>Login here !</router-link></p>
         </div>
     </div>
 </template>
