@@ -1,6 +1,6 @@
 <template>
     <div>
-        <img src='../assets/finallogo.png' alt="logo">
+        <img src='../../assets/finallogo.png' alt="logo">
         <div id="login">
             <h1>L O G I N</h1>
             <div class="login_bx">

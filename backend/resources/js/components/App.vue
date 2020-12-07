@@ -4,7 +4,7 @@
       <router-link v-if="authenticated" to="/login" @click.native="logout()" replace>Logout</router-link>
     </div>
     <router-view @authenticated="setAuthenticated" />
-  </div>
+  </div>  
 </template>
 
 <script>

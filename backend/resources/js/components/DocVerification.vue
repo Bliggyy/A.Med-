@@ -1,6 +1,6 @@
 <template>
     <div id="docVerify">
-        <img src="../assets/finallogo.png" id="logo" alt="logo">
+        <img src="../../assets/finallogo.png" id="logo" alt="logo">
         <h1>V E R I F I C A T I O N</h1>
         <div class="login_bx">
             <p>Requirements:</p>

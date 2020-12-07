@@ -1,6 +1,6 @@
 <template>
     <div id="patientHome">
-        <img src='../assets/logopatient.png' alt="logo" class="logosmall">
+        <img src='../../assets/logopatient.png' alt="logo" class="logosmall">
         <h1>Patient Home</h1><br>
         <button class="tablink" @click="openPage('Profile', this, 'white')" id="defaultOpen">P R O F I L E</button>
         <button class="tablink" @click="openPage('Appointments', this, 'white')">A P P O I N T M E N T S</button>

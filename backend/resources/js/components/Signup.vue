@@ -1,6 +1,6 @@
 <template>
     <div id="signup">
-		
+		<img src='../../assets/finallogo.png' alt="logo">
         <h1>S I G N U P</h1>
         <div class="login_bx">
             <h1>Select Account Type</h1>
