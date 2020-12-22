@@ -49886,8 +49886,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Ignacio\Desktop\Temp Prog Files\WebDev\Project\For Pushing\test\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Ignacio\Desktop\Temp Prog Files\WebDev\Project\For Pushing\test\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\liams\Desktop\A.Med-\test\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\liams\Desktop\A.Med-\test\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

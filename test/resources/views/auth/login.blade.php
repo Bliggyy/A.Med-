@@ -38,7 +38,7 @@
                     {{ __('Login') }}
                 </button>
             </form>
-            <p>No account yet? <a class="btn-link" href="{{ route('register') }}">{{ __('Login here !') }}</a></p>
+            <p>No account yet? <a class="btn-link" href="{{ route('register') }}">{{ __('Signup here !') }}</a></p>
         </div>
     </div>
 </div>

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\DocVerifyController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,6 +17,11 @@ Route::get('/', function () {
     return redirect('login');
 });
 
+Route::get('/docverify', function () {
+    return view('docverify');
+});
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('docverifycreate',[DocVerifyController::class,'store']);
