@@ -84,37 +84,6 @@ td {
     padding: 1%;
 }
 
-.tablink {
-    background-color: #ffd59a;
-    font-family: corbel;
-    font-weight: bold;
-    color: black;
-    float: left;
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;
-    border-bottom: 0;
-    cursor: pointer;
-    padding: 14px 16px;
-    font-size: 17px;
-    width: 25%;
-}
-
-.tablink2 {
-    background-color: #ffd59a;
-    font-family: corbel;
-    font-weight: bold;
-    color: black;
-    float: left;
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;
-    border-top: 1px solid black;
-    border-bottom: 0;
-    cursor: pointer;
-    padding: 14px 16px;
-    font-size: 17px;
-    width: 50%;
-}
-
 /* Start of Bootstrap  */
 .modal-open {
     overflow: hidden;
