@@ -32,7 +32,7 @@
             </table>
             <input type="submit" value="Submit" name="submit" class="login_sub"><br>
         </form>
-        <p><a class="btn-link" href="{{ route('register') }}">{{ __('Go Back') }}</a></p>
+        <p><a class="btn-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Go Back') }}</a></p>
     </div>
 </div>
 @endsection
