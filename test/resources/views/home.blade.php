@@ -8,60 +8,46 @@
 @endsection
 
 @section('content')
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-    Launch demo modal
-    </button>
-
-
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            ...
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-        </div>
-    </div>
-    </div>
+    
 
     <div class="container">
-        
-
-        
-
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#yorkminster" aria-controls="home" role="tab" data-toggle="tab">York Minster</a></li>
-            <li role="presentation"><a href="#yorkcastle" aria-controls="profile" role="tab" data-toggle="tab">York Castle</a></li>
-            <li role="presentation"><a href="#yorkmuseumgardens" aria-controls="profile" role="tab" data-toggle="tab">York Museum Gardens</a></li>
-            <li role="presentation"><a href="#yorkdungeon" aria-controls="profile" role="tab" data-toggle="tab">York Dungeon</a></li>
-            <li role="presentation"><a href="#theshambles" aria-controls="profile" role="tab" data-toggle="tab">The Shambles</a></li>
+            <li role="presentation" class="active"><a href="#yorkminster" aria-controls="home" role="tab" data-toggle="tab"> York Minster </a></li>
+            <li role="presentation"><a href="#yorkcastle" aria-controls="profile" role="tab" data-toggle="tab"> York Castle </a></li>
+            <li role="presentation"><a href="#yorkmuseumgardens" aria-controls="profile" role="tab" data-toggle="tab"> York Museum Gardens </a></li>
+            <li role="presentation"><a href="#yorkdungeon" aria-controls="profile" role="tab" data-toggle="tab"> York Dungeon </a></li>
+            <li role="presentation"><a href="#theshambles" aria-controls="profile" role="tab" data-toggle="tab"> The Shambles </a></li>
         </ul>
 
         <!-- Tab panes -->
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="yorkminster">
-                <h3>York Minster</h3>
-                <p>The <strong>Cathedral and Metropolitical Church of Saint Peter in York</strong>, commonly known 
-                    as <strong>York Minster</strong>, is the cathedral of York, England, and is one of the largest 
-                    of its kind in Northern Europe. The minster is the seat of the Archbishop of York, the second-highest 
-                    office of the Church of England, and is the mother church for the Diocese of York and the Province 
-                    of York. It is run by a dean and chapter, under the Dean of York. The title "minster" is attributed 
-                    to churches established in the Anglo-Saxon period as missionary teaching churches, and serves now 
-                    as an honorific title. Services in the minster are sometimes regarded as on the High Church or 
-                    Anglo-Catholic end of the Anglican continuum.</p>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                Launch demo modal
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
             </div>
             <div role="tabpanel" class="tab-pane" id="yorkcastle">
                 <h3>York Castle</h3>
@@ -97,20 +83,6 @@
                     none remain.</p>
             </div>              
         </div>
-        
-        <p>Demo text from <a href="https://en.wikipedia.org/">Wikipedia, the free encylopedia</a></p>
-
-        
     </div>    
     
 @endsection
-
-
-<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>  
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://cdn.rawgit.com/InventPartners/bootstrap-responsive-tabs/master/jquery.responsivetabs.js"></script>
-    <script>
-        $(function() {
-            $('.nav-tabs').responsiveTabs();
-        });
-    </script>
