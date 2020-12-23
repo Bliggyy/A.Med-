@@ -17,11 +17,12 @@ Route::get('/', function () {
     return redirect('login');
 });
 
-Route::get('/docverify', function () {
+Route::get('/register/docverify', function () {
     return view('docverify');
 });
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::post('docverifycreate',[DocVerifyController::class,'store']);
+Route::get('/register/docverify/{id}',[DocVerifyController::class], 'index');
+Route::post('/register/docverifycreate',[DocVerifyController::class,'store']);

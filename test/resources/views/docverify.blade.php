@@ -28,7 +28,7 @@
                 <tr>
                     <td><label>Reference Contacts </label></td>
                     <td><input type="file" name="refcontacts" required></td>
-                 </tr>
+                </tr>
             </table>
             <input type="submit" value="Submit" name="submit" class="login_sub"><br>
         </form>

@@ -19,6 +19,8 @@ class CreateDocverifyTable extends Migration
             $table->string('boardcert');
             $table->string('diploma');
             $table->string('refcontacts');
+            $table->unsignedBigInteger('doc_id')->nullable();
+            $table->foreign('doc_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

@@ -83,6 +83,7 @@
                     none remain.</p>
             </div>              
         </div>
+        <calendar-component></calendar-component>
     </div>    
     
 @endsection

@@ -30,7 +30,16 @@ class RegisterController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
- 
+    protected function redirectTo()
+    {
+        if (auth()->user()->account_type == "doctor") {
+            return '/register/docverify';
+        } else {
+            return '/home';
+            
+        };
+    }
+
     /**
      * Create a new controller instance.
      *
@@ -53,7 +62,7 @@ class RegisterController extends Controller
             'username' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'account_type' => ['required'],
+            'account_type' => ['required', 'string'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
