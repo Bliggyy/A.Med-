@@ -26,6 +26,7 @@ class DocVerifyController extends Controller
         $request->file('refcontacts')->move('..\public\uploads');
 
         $dv = new DocVerify;
+        $dv->doc_id = auth()->user()->id;
         $dv->doclicense = $request->doclicense->getClientOriginalName();
         $dv->boardcert = $request->boardcert->getClientOriginalName();
         $dv->diploma = $request->diploma->getClientOriginalName();

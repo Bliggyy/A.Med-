@@ -15,12 +15,13 @@ class CreateDocverifyTable extends Migration
     {
         Schema::create('docverify', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('doc_id')->nullable();
+            $table->foreign('doc_id')->references('id')->on('users');
             $table->string('doclicense');
             $table->string('boardcert');
             $table->string('diploma');
             $table->string('refcontacts');
-            $table->unsignedBigInteger('doc_id')->nullable();
-            $table->foreign('doc_id')->references('id')->on('users');
+            
             $table->timestamps();
         });
     }

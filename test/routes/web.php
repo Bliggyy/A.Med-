@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DocVerifyController;
+use App\Http\Controllers\PprofileController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,8 +22,15 @@ Route::get('/register/docverify', function () {
     return view('docverify');
 });
 
+Route::get('pprofilecreate', function () {
+    return view('home');
+});
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/register/docverify/{id}',[DocVerifyController::class], 'index');
 Route::post('/register/docverifycreate',[DocVerifyController::class,'store']);
+Route::get('home',[PprofileController::class,'index']);
+Route::post('pprofilecreate',[PprofileController::class,'store']);
+Route::post('pprofileupdate',[PprofileController::class,'update']);

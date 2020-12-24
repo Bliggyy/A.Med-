@@ -5,85 +5,146 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="{{ URL::asset('js/script.js') }}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 @endsection
 
 @section('content')
-    
-
-    <div class="container">
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#yorkminster" aria-controls="home" role="tab" data-toggle="tab"> York Minster </a></li>
-            <li role="presentation"><a href="#yorkcastle" aria-controls="profile" role="tab" data-toggle="tab"> York Castle </a></li>
-            <li role="presentation"><a href="#yorkmuseumgardens" aria-controls="profile" role="tab" data-toggle="tab"> York Museum Gardens </a></li>
-            <li role="presentation"><a href="#yorkdungeon" aria-controls="profile" role="tab" data-toggle="tab"> York Dungeon </a></li>
-            <li role="presentation"><a href="#theshambles" aria-controls="profile" role="tab" data-toggle="tab"> The Shambles </a></li>
+<div class="container1">
+  <div class="row">
+    <div class="col-md-12"> 
+      <!-- Nav tabs -->
+      <div class="card" id="card">
+        <ul class="nav nav-tabs" id="nav-tabs" role="tablist">
+          <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-home"></i><span>Appointments</span></a></li>
+          <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-user"></i><span>Profile</span></a></li>
+          <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab"><i class="fa fa-envelope-o"></i><span>Medication</span></a></li>
+          <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab"><i class="fa fa-cog"></i><span>About Us</span></a></li>
         </ul>
-
+        
         <!-- Tab panes -->
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="yorkminster">
+        <div class="tab-content" id="tab-content">
+            <!-- Tab 1 -->
+            <div role="tabpanel" class="tab-pane active" id="home">
+              <calendar-component/>
+            </div>
+            <!-- End Tab 1 -->
+
+            <!-- Tab 2 -->
+            <div role="tabpanel" class="tab-pane" id="profile">
+                <!-- Profile -->
+                  @if($data != NULL)
+                  @foreach($data as $data)
+                  @if($data->p_id == auth()->user()->id)
+                    <center><hr>
+                      Name: {{$data->lname}}, {{$data->fname}}<br>
+                      Age: {{$data->age}}<br>
+                      Sex: {{$data->sex}}<br>
+                      Birth Date:  {{$data->bdate}}<br>
+                      Phone Number: {{$data->pnumber}}<br>
+                    <hr></center>
+                  @endif
+                  @endforeach
+                  @endif  
+                <!-- End of Profile -->
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-                Launch demo modal
-                </button>
+                <center><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                    Create Profile
+                </button></center><br>
+                <center><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter2">
+                    Update Profile
+                </button></center>
+                <!-- End Button -->
 
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Create Profile</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="pprofilecreate">
+                                @csrf
+                                <input id="lname" type="text" class="login_inp" name="lname" value="{{ old('lname') }}" placeholder="Last Name" required>
+                                <input id="fname" type="text" class="login_inp" name="fname" value="{{ old('fname') }}" placeholder="First Name" required>
+                                <input id="age" type="number" class="login_inp" name="age" value="{{ old('age') }}" placeholder="Age" required><br><br>
+                                <select class="form-control" name="sex" required>
+                                    <option selected disabled>Sex</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select>
+                                <input id="bdate" type="date" class="login_inp" name="bdate" value="{{ old('bdate') }}" placeholder="Birth Date" required>
+                                <input id="pnumber" type="text" class="login_inp" name="pnumber" value="{{ old('pnumber') }}" placeholder="Phone Number" required>
+                                <input type="submit" value="Submit" name="submit" class="login_sub"><br>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </div>
                     </div>
                 </div>
+
+                <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Create Profile</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="pprofileupdate">
+                                @csrf
+                                <input type="hidden" name="p_id" value="{{$data['p_id']}}">
+                                <input id="lname" type="text" class="login_inp" name="lname" value="{{ $data['lname'] }}" placeholder="Last Name" required>
+                                <input id="fname" type="text" class="login_inp" name="fname" value="{{ $data['fname'] }}" placeholder="First Name" required>
+                                <input id="age" type="number" class="login_inp" name="age" value="{{ $data['age'] }}" placeholder="Age" required><br><br>
+                                <select class="form-control" name="sex" required>
+                                    <option selected disabled>Sex</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select>
+                                <input id="bdate" type="date" class="login_inp" name="bdate" value="{{ $data['bdate'] }}" placeholder="Birth Date" required>
+                                <input id="pnumber" type="text" class="login_inp" name="pnumber" value="{{ $data['pnumber'] }}" placeholder="Phone Number" required>
+                                <input type="submit" value="Submit" name="submit" class="login_sub"><br>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                        </div>
+                    </div>
                 </div>
+                <!-- End Modals -->
             </div>
-            <div role="tabpanel" class="tab-pane" id="yorkcastle">
-                <h3>York Castle</h3>
-                <p><strong>York Castle</strong> in the city of York, England, is a fortified complex comprising, over 
-                    the last nine centuries, a sequence of castles, prisons, law courts and other buildings on the 
-                    south side of the River Foss. The now-ruinous keep of the medieval Norman castle is commonly 
-                    referred to as <strong>Clifford's Tower</strong>. Built originally on the orders of William I to 
-                    dominate the former Viking city of York, the castle suffered a tumultuous early history before 
-                    developing into a major fortification with extensive water defences. After a major explosion in 
-                    1684 rendered the remaining military defences uninhabitable, York Castle continued to be used as 
-                    a jail and prison until 1929.</p>
+            <!-- End Tab 2 -->
+
+            <!-- Tab 3 -->
+            <div role="tabpanel" class="tab-pane" id="messages">
+              Medication
             </div>
-            <div role="tabpanel" class="tab-pane" id="yorkmuseumgardens">
-                <h3>York Museum Gardens</h3>
-                <p>The <strong>York Museum Gardens</strong> are botanic gardens in the centre of York, England, beside 
-                    the River Ouse. They cover an area of 10 acres (4.0 ha) of the former grounds of St Mary's Abbey, 
-                    and were created in the 1830s by the Yorkshire Philosophical Society along with the Yorkshire 
-                    Museum which they contain.</p>
+            <!-- End Tab 3 -->
+
+            <!-- Tab 4 -->
+            <div role="tabpanel" class="tab-pane" id="settings">
+              <center>A.med has been in development since the first year of the following students from the University of San Carlos - Talamban Campus:<br><br>
+              Chua, Dan Hoover<br>
+              Ignacio, Bligh Stian<br>
+              Lawas, Denzel John<br>
+              Villaflor, Liam Matthew<br><br>
+              ©A.med 2020</center>
             </div>
-            <div role="tabpanel" class="tab-pane" id="yorkdungeon">
-                <h3>York Dungeon</h3>
-                <p><strong>York Dungeon</strong> is a tourist attraction in York, England. York Dungeon depicts history 
-                    of the dungeon using actor led shows, special effects and displays of models and objects.</p>
-                <p>The York Dungeons reopened in March 2013 after a period of closure due to severe flooding.</p>
-            </div>   
-            <div role="tabpanel" class="tab-pane" id="theshambles">
-                <h3>The Shambles</h3>
-                <p><strong>The Shambles</strong> (official name <strong>Shambles</strong>) is an old street in York, 
-                    England, with overhanging timber-framed buildings, some dating back as far as the fourteenth century. 
-                    It was once known as <strong>The Great Flesh Shambles</strong>, probably from the Anglo-Saxon 
-                    Fleshammels (literally 'flesh-shelves'), the word for the shelves that butchers used to display 
-                    their meat. As recently as 1872 twenty-five butchers' shops were located along the street, but now 
-                    none remain.</p>
-            </div>              
+            <!-- End Tab 4 -->
         </div>
-        <calendar-component></calendar-component>
-    </div>    
-    
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
+
+

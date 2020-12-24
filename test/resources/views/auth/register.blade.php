@@ -44,7 +44,6 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
-                        <input id="name" type="text" class="login_inp" name="name" value="{{ old('name') }}" placeholder="Name" required>
                         <input id="email" type="email" class="login_inp @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" placeholder="Email" required autocomplete="email">
                         @error('email')
                             <span class="invalid-feedback" role="alert">
