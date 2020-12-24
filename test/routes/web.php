@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DocVerifyController;
 use App\Http\Controllers\PprofileController;
+use App\Http\Controllers\DocprofileController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,7 +27,7 @@ Route::get('pprofilecreate', function () {
     return view('home');
 });
 
-Route::get('/doctor-home', function() {
+Route::get('/docHome', function() {
     return view('docHome');
 });
 
@@ -38,3 +39,6 @@ Route::post('/register/docverifycreate',[DocVerifyController::class,'store']);
 Route::get('home',[PprofileController::class,'index']);
 Route::post('pprofilecreate',[PprofileController::class,'store']);
 Route::post('pprofileupdate',[PprofileController::class,'update']);
+Route::get('docHome',[DocprofileController::class,'index']);
+Route::post('docprofilecreate',[DocprofileController::class,'store']);
+Route::post('docprofileupdate',[DocprofileController::class,'update']);

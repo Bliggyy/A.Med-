@@ -92,27 +92,28 @@
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle">Create Profile</h5>
+                            <h5 class="modal-title" id="exampleModalLongTitle">Update Profile</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
+                            @if($data != NULL)
                             <form method="POST" action="pprofileupdate">
                                 @csrf
-                                <input type="hidden" name="p_id" value="{{$data['p_id']}}">
-                                <input id="lname" type="text" class="login_inp" name="lname" value="{{ $data['lname'] }}" placeholder="Last Name" required>
-                                <input id="fname" type="text" class="login_inp" name="fname" value="{{ $data['fname'] }}" placeholder="First Name" required>
-                                <input id="age" type="number" class="login_inp" name="age" value="{{ $data['age'] }}" placeholder="Age" required><br><br>
+                                <input id="lname" type="text" class="login_inp" name="lname" value="" placeholder="Last Name" required>
+                                <input id="fname" type="text" class="login_inp" name="fname" value="" placeholder="First Name" required>
+                                <input id="age" type="number" class="login_inp" name="age" value="" placeholder="Age" required><br><br>
                                 <select class="form-control" name="sex" required>
                                     <option selected disabled>Sex</option>
                                     <option value="M">Male</option>
                                     <option value="F">Female</option>
                                 </select>
-                                <input id="bdate" type="date" class="login_inp" name="bdate" value="{{ $data['bdate'] }}" placeholder="Birth Date" required>
-                                <input id="pnumber" type="text" class="login_inp" name="pnumber" value="{{ $data['pnumber'] }}" placeholder="Phone Number" required>
+                                <input id="bdate" type="date" class="login_inp" name="bdate" value="" placeholder="Birth Date" required>
+                                <input id="pnumber" type="text" class="login_inp" name="pnumber" value="" placeholder="Phone Number" required>
                                 <input type="submit" value="Submit" name="submit" class="login_sub"><br>
                             </form>
+                            @endif
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
