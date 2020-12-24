@@ -26,6 +26,10 @@ Route::get('pprofilecreate', function () {
     return view('home');
 });
 
+Route::get('/doctor-home', function() {
+    return view('docHome');
+});
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

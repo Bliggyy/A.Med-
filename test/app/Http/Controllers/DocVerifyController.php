@@ -33,6 +33,6 @@ class DocVerifyController extends Controller
         $dv->refcontacts = $request->refcontacts->getClientOriginalName();
         $dv->save();
 
-        return redirect('/home');
+        return redirect('/doctor-home');
     }
 }
