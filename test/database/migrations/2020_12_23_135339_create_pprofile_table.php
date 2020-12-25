@@ -17,6 +17,7 @@ class CreatePprofileTable extends Migration
             $table->id();
             $table->unsignedBigInteger('p_id')->nullable();
             $table->foreign('p_id')->references('id')->on('users');
+            $table->string('p_email')->unique();
             $table->string('lname');
             $table->string('fname');
             $table->integer('age');

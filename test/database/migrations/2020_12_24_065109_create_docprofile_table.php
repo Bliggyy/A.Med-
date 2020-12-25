@@ -17,6 +17,8 @@ class CreateDocprofileTable extends Migration
             $table->id();
             $table->unsignedBigInteger('doc_id')->nullable();
             $table->foreign('doc_id')->references('id')->on('users');
+            $table->string('doc_email')->unique();
+            $table->foreign('doc_email')->references('email')->on('users');
             $table->string('lname');
             $table->string('fname');
             $table->integer('age');

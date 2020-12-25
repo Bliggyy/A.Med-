@@ -22,13 +22,14 @@ class PrecordController extends Controller
     public function store(Request $request)
     {
         $pr = new Precord;
-        $pr->p_id = auth()->user()->id;
-        $pr->lname = $request->lname;
-        $pr->fname = $request->fname;
-        $pr->age = $request->age;
-        $pr->sex = $request->sex;
-        $pr->bdate = $request->bdate;
-        $pr->pnumber = $request->pnumber;
+        $pr->p_email = $request->p_email;
+        $pr->blood_type = $request->blood_type;
+        $pr->last_visit = $request->last_visit;
+        $pr->major_illnesses = $request->major_illnesses;
+        $pr->allergies = $request->allergies;
+        $pr->e_contact = $request->e_contact;
+        $pr->e_number = $request->e_number;
+        $pr->medication = $request->medication;
         $pr->save();
 
         return redirect('/docHome');
@@ -36,13 +37,14 @@ class PrecordController extends Controller
 
     public function update(Request $request)
     {
-        $pr = Precord::find($request->p_id);
-        $pr->lname = $request->lname;
-        $pr->fname = $request->fname;
-        $pr->age = $request->age;
-        $pr->sex = $request->sex;
-        $pr->bdate = $request->bdate;
-        $pr->pnumber = $request->pnumber;
+        $pr = Precord::find($request->p_email);
+        $pr->blood_type = $request->blood_type;
+        $pr->last_visit = $request->last_visit;
+        $pr->major_illnesses = $request->major_illnesses;
+        $pr->allergies = $request->allergies;
+        $pr->e_contact = $request->e_contact;
+        $pr->e_number = $request->e_number;
+        $pr->medication = $request->medication;
         $pr->save();
 
         return redirect('/docHome');

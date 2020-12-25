@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Docprofile;
 use App\Models\Precord;
+use App\Models\Pprofile;
 use Illuminate\Support\Facades\Auth;
 
 class DocprofileController extends Controller
@@ -13,7 +14,8 @@ class DocprofileController extends Controller
     {
         $data = Docprofile::all();
         $data2 = Precord::all();
-        return view('docHome', compact('data', 'data2'));
+        $data3 = Pprofile::all();
+        return view('docHome', compact('data','data2','data3'));
     }
     /**
      * 
@@ -25,6 +27,7 @@ class DocprofileController extends Controller
     {
         $dp = new Docprofile;
         $dp->doc_id = auth()->user()->id;
+        $dp->doc_email = auth()->user()->email;
         $dp->lname = $request->lname;
         $dp->fname = $request->fname;
         $dp->age = $request->age;

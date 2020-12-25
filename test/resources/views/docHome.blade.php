@@ -36,11 +36,12 @@
                 @if($data->doc_id == auth()->user()->id)
                     <center>
                       Name: {{$data->lname}}, {{$data->fname}}<br>
+                      E-mail: {{$data->doc_email}}<br>
                       Age: {{$data->age}}<br>
                       Sex: {{$data->sex}}<br>
                       Birth Date:  {{$data->bdate}}<br>
                       Phone Number: {{$data->pnumber}}<br>
-                      Clinic Address: {{$data->clinicadd}}<br>
+                      Clinic Address: {{$data->clinicadd}}<br><br>
                       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter2">
                           Update Profile
                       </button><br>
@@ -49,7 +50,7 @@
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Create Profile</h5>
+                                <h5 class="modal-title" id="exampleModalLongTitle">Update Profile</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                                 </button>
@@ -65,15 +66,13 @@
                                         <option selected disabled>Sex</option>
                                         <option value="M">Male</option>
                                         <option value="F">Female</option>
-                                    </select>
+                                    </select><br>
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Birth Date:</h5>
                                     <input id="bdate" type="date" class="login_inp" name="bdate" value="{{ $data['bdate'] }}" placeholder="Birth Date" required>
                                     <input id="pnumber" type="text" class="login_inp" name="pnumber" value="{{ $data['pnumber'] }}" placeholder="Phone Number" required>
                                     <input id="clinicadd" type="text" class="login_inp" name="clinicadd" value="{{ $data['clinicadd'] }}" placeholder="Clinic Address" required>
-                                    <input type="submit" value="Submit" name="submit" class="login_sub"><br>
+                                    <input type="submit" value="Submit" name="submit" class="login_sub">
                                 </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                             </div>
                         </div>
@@ -105,15 +104,13 @@
                                     <option selected disabled>Sex</option>
                                     <option value="M">Male</option>
                                     <option value="F">Female</option>
-                                </select>
+                                </select><br>
+                                <h5 class="modal-title" id="exampleModalLongTitle">Birth Date:</h5>
                                 <input id="bdate" type="date" class="login_inp" name="bdate" value="{{ old('bdate') }}" placeholder="Birth Date" required>
                                 <input id="pnumber" type="text" class="login_inp" name="pnumber" value="{{ old('pnumber') }}" placeholder="Phone Number" required>
                                 <input id="clinicadd" type="text" class="login_inp" name="clinicadd" value="{{ old('clinicadd') }}" placeholder="Clinic Address" required>
-                                <input type="submit" value="Submit" name="submit" class="login_sub"><br>
+                                <input type="submit" value="Submit" name="submit" class="login_sub">
                             </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                         </div>
                     </div>
@@ -125,7 +122,7 @@
             <div role="tabpanel" class="tab-pane" id="messages">
                 <center><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter3">
                     Add Patient Record
-                </button></center>
+                </button></center><br><hr>
                 <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
@@ -136,28 +133,82 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form method="POST" action="docprofilecreate">
+                            <form method="POST" action="prcreate">
                                 @csrf
-                                <input id="lname" type="text" class="login_inp" name="lname" value="{{ old('lname') }}" placeholder="Last Name" required>
-                                <input id="fname" type="text" class="login_inp" name="fname" value="{{ old('fname') }}" placeholder="First Name" required>
-                                <input id="age" type="number" class="login_inp" name="age" value="{{ old('age') }}" placeholder="Age" required><br><br>
-                                <select class="form-control" name="sex" required>
-                                    <option selected disabled>Sex</option>
-                                    <option value="M">Male</option>
-                                    <option value="F">Female</option>
-                                </select>
-                                <input id="bdate" type="date" class="login_inp" name="bdate" value="{{ old('bdate') }}" placeholder="Birth Date" required>
-                                <input id="pnumber" type="text" class="login_inp" name="pnumber" value="{{ old('pnumber') }}" placeholder="Phone Number" required>
-                                <input id="clinicadd" type="text" class="login_inp" name="clinicadd" value="{{ old('clinicadd') }}" placeholder="Clinic Address" required>
-                                <input type="submit" value="Submit" name="submit" class="login_sub"><br>
+                                <input id="p_email" type="text" class="login_inp" name="p_email" value="{{ old('p_email') }}" placeholder="Patient's E-mail" required>
+                                <input id="blood_type" type="text" class="login_inp" name="blood_type" value="{{ old('blood_type') }}" placeholder="Blood Type" required><br><br>
+                                <h5 class="modal-title" id="exampleModalLongTitle">Last Visit:</h5>
+                                <input id="last_visit" type="date" class="login_inp" name="last_visit" value="{{ old('last_visit') }}" placeholder="Last Visit" required>
+                                <input id="major_illnesses" type="text" class="login_inp" name="major_illnesses" value="{{ old('major_illnesses') }}" placeholder="Major Illnesses" required>
+                                <input id="allergies" type="text" class="login_inp" name="allergies" value="{{ old('allergies') }}" placeholder="Allergies" required>
+                                <input id="e_contact" type="text" class="login_inp" name="e_contact" value="{{ old('e_contact') }}" placeholder="Emergency Contact Person" required>
+                                <input id="e_number" type="text" class="login_inp" name="e_number" value="{{ old('e_number') }}" placeholder="Emergency Contact Number" required>
+                                <input id="medication" type="text" class="login_inp" name="medication" value="{{ old('medication') }}" placeholder="Medication" required>
+                                <input type="submit" value="Submit" name="submit" class="login_sub">
                             </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                         </div>
                     </div>
                 </div>
+                
+                @if($data2 != NULL)
+                @foreach($data2 as $data2)
+                @if($data3 != NULL)
+                @foreach($data3 as $data3)
+                @if($data2->p_email == $data3->p_email)
+                  <center>
+                    Name: {{$data3->lname}}, {{$data3->fname}}<br>
+                    E-mail: {{$data3->p_email}}<br>
+                    Age: {{$data3->age}}<br>
+                    Sex: {{$data3->sex}}<br>
+                    Birth Date:  {{$data3->bdate}}<br>
+                    Phone Number: {{$data3->pnumber}}<br>
+                    Blood Type: {{$data2->blood_type}}<br>
+                    Last Visit: {{$data2->last_visit}}<br>
+                    Major Illnesses: {{$data2->major_illnesses}}<br>
+                    Allergies: {{$data2->allergies}}<br>
+                    Emergency Contact Person: {{$data2->e_contact}}<br>
+                    Emergency Contact Number: {{$data2->e_number}}<br>
+                    Current Medication: {{$data2->medication}}<br><br>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter4">
+                      Update Record
+                    </button><br>
+                  <hr></center>
+                  <div class="modal fade" id="exampleModalCenter4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                     <div class="modal-dialog modal-dialog-centered" role="document">
+                         <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLongTitle">Update Record</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                              </button>
+                          </div>
+                          <div class="modal-body">
+                              <form method="POST" action="prupdate">
+                                  @csrf
+                                  <input type="hidden" name="p_id" value="{{$data2['p_id']}}">
+                                  <input id="p_email" type="text" class="login_inp" name="p_email" value="{{ $data2['p_email'] }}" placeholder="Patient's E-mail" required>
+                                  <input id="blood_type" type="text" class="login_inp" name="blood_type" value="{{ $data2['blood_type'] }}" placeholder="Blood Type" required><br><br>
+                                  <h5 class="modal-title" id="exampleModalLongTitle">Last Visit:</h5>
+                                  <input id="last_visit" type="date" class="login_inp" name="last_visit" value="{{ $data2['last_visit'] }}" placeholder="Last Visit" required>
+                                  <input id="major_illnesses" type="text" class="login_inp" name="major_illnesses" value="{{ $data2['major_illnesses'] }}" placeholder="Major Illnesses" required>
+                                  <input id="allergies" type="text" class="login_inp" name="allergies" value="{{ $data2['allergies'] }}" placeholder="Allergies" required>
+                                  <input id="e_contact" type="text" class="login_inp" name="e_contact" value="{{ $data2['e_contact'] }}" placeholder="Emergency Contact Person" required>
+                                  <input id="e_number" type="text" class="login_inp" name="e_number" value="{{ $data2['e_number'] }}" placeholder="Emergency Contact Number" required>
+                                  <input id="medication" type="text" class="login_inp" name="medication" value="{{ $data2['medication'] }}" placeholder="Medication" required>
+                                  <input type="submit" value="Submit" name="submit" class="login_sub">
+                              </form>
+                          </div>
+                          </div>
+                      </div>
+                  </div>
+                  @break
+                @endif
+                @endforeach
+                @break
+                @endif
+                @endforeach
+                @endif
             </div>
             <!-- End Tab 3 -->
 

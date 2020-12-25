@@ -15,14 +15,15 @@ class CreatePrecordTable extends Migration
     {
         Schema::create('precord', function (Blueprint $table) {
             $table->id();
-            $table->string('p_email');
-            $table->foreign('p_email')->references('email')->on('users');
+            $table->string('p_email')->unique();
+            $table->foreign('p_email')->references('p_email')->on('pprofile');
             $table->string('blood_type');
-            $table->string('last_visit');
+            $table->date('last_visit');
             $table->string('major_illnesses');
             $table->string('allergies');
             $table->string('e_contact');
             $table->string('e_number');
+            $table->string('medication')->nullable();
             
             $table->timestamps();
         });

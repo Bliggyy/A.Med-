@@ -4,14 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pprofile;
+use App\Models\Precord;
 use Illuminate\Support\Facades\Auth;
 
 class PprofileController extends Controller
 {
     public function index()
     {
-        $data = Pprofile::all();
-        return view('home',['data'=>$data]);
+        $data3 = Pprofile::all();
+        $data2 = Precord::all();
+        return view('home', compact('data2','data3'));
     }
     /**
      * 
@@ -23,6 +25,7 @@ class PprofileController extends Controller
     {
         $pp = new Pprofile;
         $pp->p_id = auth()->user()->id;
+        $pp->p_email = auth()->user()->email;
         $pp->lname = $request->lname;
         $pp->fname = $request->fname;
         $pp->age = $request->age;
