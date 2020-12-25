@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DocVerifyController;
 use App\Http\Controllers\PprofileController;
 use App\Http\Controllers\DocprofileController;
+use App\Http\Controllers\PrecordController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -42,3 +43,6 @@ Route::post('pprofileupdate',[PprofileController::class,'update']);
 Route::get('docHome',[DocprofileController::class,'index']);
 Route::post('docprofilecreate',[DocprofileController::class,'store']);
 Route::post('docprofileupdate',[DocprofileController::class,'update']);
+Route::get('docHome',[PrecordController::class,'index']);
+Route::post('prcreate',[PrecordController::class,'store']);
+Route::post('prupdate',[PrecordController::class,'update']);

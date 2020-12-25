@@ -36,7 +36,7 @@ class PprofileController extends Controller
 
     public function update(Request $request)
     {
-        $pp = Pprofile::find($request->id);
+        $pp = Pprofile::find($request->p_id);
         $pp->lname = $request->lname;
         $pp->fname = $request->fname;
         $pp->age = $request->age;

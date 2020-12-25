@@ -30,7 +30,7 @@ class LoginController extends Controller
     protected function redirectTo()
     {
         if (auth()->user()->account_type == "doctor") {
-            return '/doctor-home';
+            return '/docHome';
         } else {
             return '/home';
             

@@ -37,7 +37,7 @@ class DocprofileController extends Controller
 
     public function update(Request $request)
     {
-        $dp = Docprofile::find($request->id);
+        $dp = Docprofile::find($request->doc_id);
         $dp->lname = $request->lname;
         $dp->fname = $request->fname;
         $dp->age = $request->age;
