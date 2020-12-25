@@ -43,6 +43,7 @@ Route::post('pprofileupdate',[PprofileController::class,'update']);
 Route::get('docHome',[DocprofileController::class,'index']);
 Route::post('docprofilecreate',[DocprofileController::class,'store']);
 Route::post('docprofileupdate',[DocprofileController::class,'update']);
-Route::get('docHome',[PrecordController::class,'index']);
+// commented this out for now 
+//Route::get('docHome',[PrecordController::class,'index']);
 Route::post('prcreate',[PrecordController::class,'store']);
 Route::post('prupdate',[PrecordController::class,'update']);

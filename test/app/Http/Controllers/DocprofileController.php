@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Docprofile;
+use App\Models\Precord;
 use Illuminate\Support\Facades\Auth;
 
 class DocprofileController extends Controller
@@ -11,7 +12,8 @@ class DocprofileController extends Controller
     public function index()
     {
         $data = Docprofile::all();
-        return view('docHome',['data'=>$data]);
+        $data2 = Precord::all();
+        return view('docHome', compact('data', 'data2'));
     }
     /**
      * 
