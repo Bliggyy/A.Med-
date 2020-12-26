@@ -103,7 +103,7 @@ class CalendarController extends Controller
      */
     public function destroy($id)
     {
-        $delete = Appointments::find($events);
+        $delete = Appointments::find($id);
         $delete->delete();
         return response('Event removed successfully!');
     }
