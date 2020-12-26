@@ -25,7 +25,7 @@
         <div class="tab-content" id="tab-content">
             <!-- Tab 1 -->
             <div role="tabpanel" class="tab-pane active" id="home">
-              <calendar-component/>
+              <calendar-component id="{{ auth()->user()->id }}" acc_type="{{ auth()->user()->account_type }}" />
             </div>
             <!-- End Tab 1 -->
 

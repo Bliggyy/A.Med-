@@ -4,27 +4,27 @@
       <div class="col-md-8">
         <form @submit.prevent>
           <div class="form-group">
-            <label for="title">Appointment Name</label>
-            <input type="text" id="title" class="form-control" v-model="newEvent.title">
-          </div>
-          <div class="form-group">
             <label for="doctors">Doctor List</label>
             <select class="form-control" name="name_of_movie" v-model="newEvent.doc_id">
               <option selected disabled>Choose a doctor</option>
               <option v-for="doctor in doctorList" :key="doctor.id" :value="doctor.doc_id" @click="getDocEvent">{{ doctor.lname }}, {{ doctor.fname }}</option>
             </select>
           </div>
+          <div class="form-group">
+            <label for="title">Appointment Name</label>
+            <input type="text" id="title" class="form-control" v-model="newEvent.title">
+          </div>
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <label for="start">Date</label>
-                <input type="date" id="start" class="form-control" v-model="newEvent.start" >
+                <input type="date" id="start" class="form-control" v-model="newEvent.start">
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
                 <label for="startTime">Time</label>
-                <input type="time" id="startTime" class="form-control" v-model="newEvent.startTime" >
+                <input type="time" id="startTime" class="form-control" v-model="newEvent.startTime">
               </div>
             </div>
             <div class="col-md-6 mb-4" v-if="addingMode">
@@ -59,6 +59,10 @@ export default {
   components: {
     Fullcalendar
   },
+  props: {
+    id: String,
+    acc_type: String
+  },
   data() {
     return {
       calendarOptions: {
@@ -71,7 +75,7 @@ export default {
         initialView: 'dayGridMonth', 
         selectable: true,
         eventOverlap: false,
-        eventClick: this.showEvent,
+        eventClick: this.showEventCheck,
         events: []
       },
       newEvent: {
@@ -102,7 +106,8 @@ export default {
       if (this.overlap() != true) {
         axios
         .post("/api/appointment", {
-          ...this.newEvent
+          ...this.newEvent,
+          ...this.$props
         })
         .then(data => {
           this.getDocEvent(); // update our list of events
@@ -115,23 +120,36 @@ export default {
         alert('You cannot add events on the same time and day. Please choose a different time');
       }
     },
+    showEventCheck(arg) {
+      console.log(arg.event._def.extendedProps.user_id);
+      if (this.$props.acc_type == "doctor") {
+        if (this.$props.id == arg.event._def.extendedProps.doc_id) {
+          this.showEvent(arg);
+        } else {
+          this.addingMode = true;
+        }
+      } else {
+        if (this.$props.id == arg.event._def.extendedProps.user_id) {
+          this.showEvent(arg);
+        } else {
+          this.addingMode = true;
+        }
+      }
+    },
     showEvent(arg) {
       this.addingMode = false;
-      const { id, title, start, end } = this.calendarOptions.events.find(
-        event => event.id === +arg.event.id
-      );
-      this.indexToUpdate = id;
-      this.newEvent = {
-        title: title,
-        start: start.split(' ')[0],
-        doc_id: this.newEvent.doc_id,
-        end: end.split(' ')[0],
-        startTime: start.split(' ')[1],
-        endTime: end.split(' ')[1]
-      };
-    },
-    findDoctor() {
-
+        const { id, title, start, end } = this.calendarOptions.events.find(
+          event => event.id === +arg.event.id
+        );
+        this.indexToUpdate = id;
+        this.newEvent = {
+          title: title,
+          start: start.split(' ')[0],
+          doc_id: this.newEvent.doc_id,
+          end: end.split(' ')[0],
+          startTime: start.split(' ')[1],
+          endTime: end.split(' ')[1]
+        };
     },
     updateEvent() {
       if (this.overlapUpdate() != true) {

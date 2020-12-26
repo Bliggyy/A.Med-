@@ -18,6 +18,7 @@ class AppointmentsResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'doc_id' => $this->doc_id,
+            'user_id' => $this->user_id,
             'start' => $this->start,
             'end' => $this->end,
         ];

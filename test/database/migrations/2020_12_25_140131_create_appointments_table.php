@@ -17,6 +17,8 @@ class CreateAppointmentsTable extends Migration
             $table->increments('id');
             $table->unsignedBigInteger('doc_id')->nullable();
             $table->foreign('doc_id')->references('id')->on('users');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->string('title');
             $table->datetime('start');
             $table->datetime('end');

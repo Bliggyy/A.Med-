@@ -36,8 +36,7 @@ class RegisterController extends Controller
             return '/register/docverify';
         } else {
             return '/home';
-            
-        };
+        }
     }
 
     /**

@@ -19380,6 +19380,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   components: {
     Fullcalendar: _fullcalendar_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
+  props: {
+    id: String,
+    acc_type: String
+  },
   data: function data() {
     return {
       calendarOptions: {
@@ -19392,7 +19396,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         initialView: 'dayGridMonth',
         selectable: true,
         eventOverlap: false,
-        eventClick: this.showEvent,
+        eventClick: this.showEventCheck,
         events: []
       },
       newEvent: {
@@ -19421,7 +19425,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
 
       if (this.overlap() != true) {
-        axios__WEBPACK_IMPORTED_MODULE_5___default.a.post("/api/appointment", _objectSpread({}, this.newEvent)).then(function (data) {
+        axios__WEBPACK_IMPORTED_MODULE_5___default.a.post("/api/appointment", _objectSpread(_objectSpread({}, this.newEvent), this.$props)).then(function (data) {
           _this.getDocEvent(); // update our list of events
 
 
@@ -19432,6 +19436,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         });
       } else {
         alert('You cannot add events on the same time and day. Please choose a different time');
+      }
+    },
+    showEventCheck: function showEventCheck(arg) {
+      console.log(arg.event._def.extendedProps.user_id);
+
+      if (this.$props.acc_type == "doctor") {
+        if (this.$props.id == arg.event._def.extendedProps.doc_id) {
+          this.showEvent(arg);
+        } else {
+          this.addingMode = true;
+        }
+      } else {
+        if (this.$props.id == arg.event._def.extendedProps.user_id) {
+          this.showEvent(arg);
+        } else {
+          this.addingMode = true;
+        }
       }
     },
     showEvent: function showEvent(arg) {
@@ -19455,7 +19476,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         endTime: end.split(' ')[1]
       };
     },
-    findDoctor: function findDoctor() {},
     updateEvent: function updateEvent() {
       var _this2 = this;
 
@@ -24092,7 +24112,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* @import \"~@fullcalendar/core/main.css\";\r\n@import \"~@fullcalendar/daygrid/main.css\"; */\n.fc-title {\r\n  color: #fff;\n}\n.fc-title:hover {\r\n  cursor: pointer;\n}\r\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* @import \"~@fullcalendar/core/main.css\";\r\n@import \"~@fullcalendar/daygrid/main.css\"; */\n.fc-title {\r\n  color: #fff;\n}\n.fc-title:hover {\r\n  cursor: pointer;\n}\r\n", ""]);
 
 // exports
 
@@ -70262,34 +70282,6 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "title" } }, [
-                _vm._v("Appointment Name")
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.newEvent.title,
-                    expression: "newEvent.title"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { type: "text", id: "title" },
-                domProps: { value: _vm.newEvent.title },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.newEvent, "title", $event.target.value)
-                  }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
               _c("label", { attrs: { for: "doctors" } }, [
                 _vm._v("Doctor List")
               ]),
@@ -70350,6 +70342,34 @@ var render = function() {
                 ],
                 2
               )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "title" } }, [
+                _vm._v("Appointment Name")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.newEvent.title,
+                    expression: "newEvent.title"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text", id: "title" },
+                domProps: { value: _vm.newEvent.title },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.newEvent, "title", $event.target.value)
+                  }
+                }
+              })
             ]),
             _vm._v(" "),
             _c(
