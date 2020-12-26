@@ -19370,11 +19370,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
 
 
 
@@ -19396,36 +19391,48 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         },
         initialView: 'dayGridMonth',
         selectable: true,
+        eventOverlap: false,
         eventClick: this.showEvent,
         events: []
       },
       newEvent: {
         title: "",
+        doc_id: "",
         start: "",
         end: "",
         startTime: "",
         endTime: ""
       },
+      doctorList: [{
+        doc_id: "",
+        fname: "",
+        lname: ""
+      }],
       addingMode: true,
       indexToUpdate: ""
     };
   },
   mounted: function mounted() {
-    this.getEvents();
+    //this.getEvents();
+    this.docList();
   },
   methods: {
     addNewEvent: function addNewEvent() {
       var _this = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_5___default.a.post("/api/events", _objectSpread({}, this.newEvent)).then(function (data) {
-        _this.getEvents(); // update our list of events
+      if (this.overlap() != true) {
+        axios__WEBPACK_IMPORTED_MODULE_5___default.a.post("/api/appointment", _objectSpread({}, this.newEvent)).then(function (data) {
+          _this.getDocEvent(); // update our list of events
 
 
-        _this.resetForm(); // clear newEvent properties (e.g. title, start and end)
+          _this.resetForm(); // clear newEvent properties (e.g. title, start and end)
 
-      })["catch"](function (err) {
-        return console.log("Unable to add new event!", err.response.data);
-      });
+        })["catch"](function (err) {
+          return console.log("Unable to add new event!", err.response.data);
+        });
+      } else {
+        alert('You cannot add events on the same time and day. Please choose a different time');
+      }
     },
     showEvent: function showEvent(arg) {
       this.addingMode = false;
@@ -19442,33 +19449,39 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.newEvent = {
         title: title,
         start: start.split(' ')[0],
+        doc_id: this.newEvent.doc_id,
         end: end.split(' ')[0],
         startTime: start.split(' ')[1],
         endTime: end.split(' ')[1]
       };
     },
+    findDoctor: function findDoctor() {},
     updateEvent: function updateEvent() {
       var _this2 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_5___default.a.patch("/api/events/" + this.indexToUpdate, _objectSpread({}, this.newEvent)).then(function (data) {
-        _this2.resetForm();
+      if (this.overlapUpdate() != true) {
+        axios__WEBPACK_IMPORTED_MODULE_5___default.a.patch("/api/appointment/" + this.indexToUpdate, _objectSpread({}, this.newEvent)).then(function (data) {
+          _this2.resetForm();
 
-        _this2.getEvents();
+          _this2.getDocEvent();
 
-        _this2.addingMode = !_this2.addingMode;
-      })["catch"](function (err) {
-        return console.log("Unable to update event!", err.response.data);
-      });
+          _this2.addingMode = true;
+        })["catch"](function (err) {
+          return console.log("Unable to update event!", err.response.data);
+        });
+      } else {
+        alert('You cannot add events on the same time and day. Please choose a different time');
+      }
     },
     deleteEvent: function deleteEvent() {
       var _this3 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_5___default.a["delete"]("/api/events/" + this.indexToUpdate).then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_5___default.a["delete"]("/api/appointment/" + this.indexToUpdate).then(function (response) {
         _this3.resetForm();
 
-        _this3.getEvents();
+        _this3.getDocEvent();
 
-        _this3.addingMode = !_this3.addingMode;
+        _this3.addingMode = true;
       })["catch"](function (err) {
         return console.log("Unable to delete event!", err.response.data);
       });
@@ -19476,18 +19489,82 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     getEvents: function getEvents() {
       var _this4 = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_5___default.a.get("/api/events").then(function (response) {
+      axios__WEBPACK_IMPORTED_MODULE_5___default.a.get("/api/appointment").then(function (response) {
         return _this4.calendarOptions.events = response.data.data;
       })["catch"](function (err) {
         return console.log(err.response.data);
       });
     },
-    resetForm: function resetForm() {
+    getDocEvent: function getDocEvent() {
       var _this5 = this;
 
-      Object.keys(this.newEvent).forEach(function (key) {
-        return _this5.newEvent[key] = "";
+      this.addingMode = true;
+      axios__WEBPACK_IMPORTED_MODULE_5___default.a.get("/api/appointment/" + this.newEvent.doc_id).then(function (response) {
+        _this5.resetForm();
+
+        _this5.calendarOptions.events = {};
+        _this5.calendarOptions.events = response.data.data;
+      })["catch"](function (err) {
+        return console.log(err.response.data);
       });
+    },
+    docList: function docList() {
+      var _this6 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_5___default.a.get("api/list").then(function (response) {
+        return _this6.doctorList = response.data.data;
+      })["catch"](function (err) {
+        return console.log(err.response.data);
+      });
+    },
+    resetForm: function resetForm() {
+      var _this7 = this;
+
+      Object.keys(this.newEvent).forEach(function (key) {
+        if (_this7.newEvent[key] != _this7.newEvent.doc_id) {
+          return _this7.newEvent[key] = "";
+        }
+      });
+    },
+    overlap: function overlap() {
+      var i;
+      var array = this.calendarOptions.events;
+      var startTime = this.newEvent.start + ' ' + this.newEvent.startTime;
+      var end = new Date("2020-10-10" + ' ' + this.newEvent.startTime);
+      end.setMinutes(end.getMinutes() + 30);
+      var time = end.toString().split(' ')[4];
+      var endTime = this.newEvent.start + ' ' + time;
+
+      for (i in array) {
+        if (startTime >= array[i].start && startTime < array[i].end) {
+          return true;
+        } else if (endTime > array[i].start && endTime <= array[i].end) {
+          return true;
+        }
+      }
+
+      return false;
+    },
+    overlapUpdate: function overlapUpdate() {
+      var i;
+      var array = this.calendarOptions.events;
+      var startTime = this.newEvent.start + ' ' + this.newEvent.startTime;
+      var end = new Date("2020-10-10" + ' ' + this.newEvent.startTime);
+      end.setMinutes(end.getMinutes() + 30);
+      var time = end.toString().split(' ')[4];
+      var endTime = this.newEvent.start + ' ' + time;
+
+      for (i in array) {
+        if (array[i].id != this.indexToUpdate) {
+          if (startTime >= array[i].start && startTime < array[i].end) {
+            return true;
+          } else if (endTime > array[i].start && endTime <= array[i].end) {
+            return true;
+          }
+        }
+      }
+
+      return false;
     }
   },
   watch: {
@@ -24015,7 +24092,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/* @import \"~@fullcalendar/core/main.css\";\n@import \"~@fullcalendar/daygrid/main.css\"; */\n.fc-title {\n  color: #fff;\n}\n.fc-title:hover {\n  cursor: pointer;\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* @import \"~@fullcalendar/core/main.css\";\r\n@import \"~@fullcalendar/daygrid/main.css\"; */\n.fc-title {\r\n  color: #fff;\n}\n.fc-title:hover {\r\n  cursor: pointer;\n}\r\n", ""]);
 
 // exports
 
@@ -70212,15 +70289,76 @@ var render = function() {
               })
             ]),
             _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "doctors" } }, [
+                _vm._v("Doctor List")
+              ]),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.newEvent.doc_id,
+                      expression: "newEvent.doc_id"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { name: "name_of_movie" },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.newEvent,
+                        "doc_id",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
+                  }
+                },
+                [
+                  _c("option", { attrs: { selected: "", disabled: "" } }, [
+                    _vm._v("Choose a doctor")
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(_vm.doctorList, function(doctor) {
+                    return _c(
+                      "option",
+                      {
+                        key: doctor.id,
+                        domProps: { value: doctor.doc_id },
+                        on: { click: _vm.getDocEvent }
+                      },
+                      [
+                        _vm._v(
+                          _vm._s(doctor.lname) + ", " + _vm._s(doctor.fname)
+                        )
+                      ]
+                    )
+                  })
+                ],
+                2
+              )
+            ]),
+            _vm._v(" "),
             _c(
               "div",
               { staticClass: "row" },
               [
                 _c("div", { staticClass: "col-md-6" }, [
                   _c("div", { staticClass: "form-group" }, [
-                    _c("label", { attrs: { for: "start" } }, [
-                      _vm._v("Start Date")
-                    ]),
+                    _c("label", { attrs: { for: "start" } }, [_vm._v("Date")]),
                     _vm._v(" "),
                     _c("input", {
                       directives: [
@@ -70248,39 +70386,8 @@ var render = function() {
                 _vm._v(" "),
                 _c("div", { staticClass: "col-md-6" }, [
                   _c("div", { staticClass: "form-group" }, [
-                    _c("label", { attrs: { for: "end" } }, [
-                      _vm._v("End Date")
-                    ]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.newEvent.end,
-                          expression: "newEvent.end"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "date", id: "end" },
-                      domProps: { value: _vm.newEvent.end },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.newEvent, "end", $event.target.value)
-                        }
-                      }
-                    })
-                  ])
-                ]),
-                _c("br"),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-6" }, [
-                  _c("div", { staticClass: "form-group" }, [
                     _c("label", { attrs: { for: "startTime" } }, [
-                      _vm._v("Start Time")
+                      _vm._v("Time")
                     ]),
                     _vm._v(" "),
                     _c("input", {
@@ -70305,36 +70412,6 @@ var render = function() {
                             "startTime",
                             $event.target.value
                           )
-                        }
-                      }
-                    })
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-6" }, [
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", { attrs: { for: "endTime" } }, [
-                      _vm._v("End Time")
-                    ]),
-                    _vm._v(" "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.newEvent.endTime,
-                          expression: "newEvent.endTime"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      attrs: { type: "time", id: "endTime" },
-                      domProps: { value: _vm.newEvent.endTime },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(_vm.newEvent, "endTime", $event.target.value)
                         }
                       }
                     })

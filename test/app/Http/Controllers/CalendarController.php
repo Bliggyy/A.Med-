@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\AppointmentsResource;
+use App\Models\Appointments;
 
 class CalendarController extends Controller
 {
@@ -13,7 +15,7 @@ class CalendarController extends Controller
      */
     public function index()
     {
-        //
+        return AppointmentsResource::collection(Appointments::all());
     }
 
     /**
@@ -34,7 +36,19 @@ class CalendarController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->end = date('Y-m-d', strtotime("$request->start"));
+        $request->endTime = date('H:i:s', strtotime("$request->startTime + 30 minutes"));
+        $new_event = new Appointments([
+            'title' => $request->input('title'),
+            'doc_id' => $request->input('doc_id'),
+            'start' => date('Y-m-d H:i:s', strtotime("$request->start $request->startTime")),
+            'end' => date('Y-m-d H:i:s', strtotime("$request->end $request->endTime"))
+        ]);
+        $new_event->save();
+        return response()->json([
+            'data' => new AppointmentsResource($new_event),
+            'message' => 'Successfully added new event !',
+        ]);
     }
 
     /**
@@ -45,7 +59,7 @@ class CalendarController extends Controller
      */
     public function show($id)
     {
-        //
+        return AppointmentsResource::collection(Appointments::where('doc_id', $id)->get());
     }
 
     /**
@@ -68,7 +82,17 @@ class CalendarController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $update = Appointments::find($id);
+        $request->end = date('Y-m-d', strtotime("$request->start"));
+        $request->endTime = date('H:i:s', strtotime("$request->startTime + 30 minutes"));
+        $update->title = $request->input('title');
+        $update->start = date('Y-m-d H:i:s', strtotime("$request->start $request->startTime"));
+        $update->end = date('Y-m-d H:i:s', strtotime("$request->end $request->endTime"));
+        $update->save();
+        return response()->json([
+            'data' => new AppointmentsResource($request),
+            'message' => 'Successfully updated event!',
+        ]);
     }
 
     /**
@@ -79,6 +103,8 @@ class CalendarController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $delete = Appointments::find($events);
+        $delete->delete();
+        return response('Event removed successfully!');
     }
 }

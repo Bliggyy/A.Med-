@@ -7,29 +7,24 @@
             <label for="title">Appointment Name</label>
             <input type="text" id="title" class="form-control" v-model="newEvent.title">
           </div>
+          <div class="form-group">
+            <label for="doctors">Doctor List</label>
+            <select class="form-control" name="name_of_movie" v-model="newEvent.doc_id">
+              <option selected disabled>Choose a doctor</option>
+              <option v-for="doctor in doctorList" :key="doctor.id" :value="doctor.doc_id" @click="getDocEvent">{{ doctor.lname }}, {{ doctor.fname }}</option>
+            </select>
+          </div>
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="start">Start Date</label>
+                <label for="start">Date</label>
                 <input type="date" id="start" class="form-control" v-model="newEvent.start" >
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label for="end">End Date</label>
-                <input type="date" id="end" class="form-control" v-model="newEvent.end">
-              </div>
-            </div><br>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="startTime">Start Time</label>
+                <label for="startTime">Time</label>
                 <input type="time" id="startTime" class="form-control" v-model="newEvent.startTime" >
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="endTime">End Time</label>
-                <input type="time" id="endTime" class="form-control" v-model="newEvent.endTime">
               </div>
             </div>
             <div class="col-md-6 mb-4" v-if="addingMode">
@@ -75,36 +70,50 @@ export default {
         },
         initialView: 'dayGridMonth', 
         selectable: true,
+        eventOverlap: false,
         eventClick: this.showEvent,
         events: []
       },
       newEvent: {
         title: "",
+        doc_id: "",
         start: "",
         end: "",
         startTime: "",
         endTime: "",
       },
+      doctorList: [
+        {
+          doc_id: "",
+          fname: "",
+          lname: ""
+        }
+      ],
       addingMode: true,
       indexToUpdate: ""
     };
   },
   mounted() {
-    this.getEvents();
+    //this.getEvents();
+    this.docList();
   },
   methods: {
     addNewEvent() {
-      axios
-        .post("/api/events", {
+      if (this.overlap() != true) {
+        axios
+        .post("/api/appointment", {
           ...this.newEvent
         })
         .then(data => {
-          this.getEvents(); // update our list of events
+          this.getDocEvent(); // update our list of events
           this.resetForm(); // clear newEvent properties (e.g. title, start and end)
         })
         .catch(err =>
           console.log("Unable to add new event!", err.response.data)
         );
+      } else {
+        alert('You cannot add events on the same time and day. Please choose a different time');
+      }
     },
     showEvent(arg) {
       this.addingMode = false;
@@ -115,32 +124,41 @@ export default {
       this.newEvent = {
         title: title,
         start: start.split(' ')[0],
+        doc_id: this.newEvent.doc_id,
         end: end.split(' ')[0],
         startTime: start.split(' ')[1],
         endTime: end.split(' ')[1]
       };
     },
+    findDoctor() {
+
+    },
     updateEvent() {
-      axios
-        .patch("/api/events/" + this.indexToUpdate, {
+      if (this.overlapUpdate() != true) {
+        axios
+        .patch("/api/appointment/" + this.indexToUpdate, {
           ...this.newEvent
         })
         .then(data => {
           this.resetForm();
-          this.getEvents();
-          this.addingMode = !this.addingMode;
+          this.getDocEvent();
+          this.addingMode = true;
         })
         .catch(err =>
           console.log("Unable to update event!", err.response.data)
         );
+      } else {
+        alert('You cannot add events on the same time and day. Please choose a different time');
+      }
+      
     },
     deleteEvent() {
       axios
-        .delete("/api/events/" + this.indexToUpdate)
+        .delete("/api/appointment/" + this.indexToUpdate)
         .then(response => {
           this.resetForm();
-          this.getEvents();
-          this.addingMode = !this.addingMode;
+          this.getDocEvent();
+          this.addingMode = true;
         })
         .catch(err =>
           console.log("Unable to delete event!", err.response.data)
@@ -148,14 +166,69 @@ export default {
     },
     getEvents() {
       axios
-        .get("/api/events")
+        .get("/api/appointment")
         .then(response => (this.calendarOptions.events = response.data.data))
+        .catch(err => console.log(err.response.data));
+    },
+    getDocEvent() {
+      this.addingMode = true;
+      axios
+        .get("/api/appointment/" + this.newEvent.doc_id)
+          .then(response => {
+            this.resetForm();
+            this.calendarOptions.events = {};
+            this.calendarOptions.events = response.data.data;
+          })
+          .catch(err => console.log(err.response.data));
+    },
+    docList() {
+      axios
+        .get("api/list")
+        .then(response => (this.doctorList = response.data.data))
         .catch(err => console.log(err.response.data));
     },
     resetForm() {
       Object.keys(this.newEvent).forEach(key => {
-        return (this.newEvent[key] = "");
+        if (this.newEvent[key] != this.newEvent.doc_id) {
+          return (this.newEvent[key] = "");
+        }
       });
+    },
+    overlap() {
+      let i;
+      let array = this.calendarOptions.events;
+      let startTime = this.newEvent.start + ' ' + this.newEvent.startTime;
+      let end = new Date("2020-10-10" + ' ' + this.newEvent.startTime);
+      end.setMinutes(end.getMinutes() + 30);
+      let time = end.toString().split(' ')[4];
+      let endTime = this.newEvent.start + ' ' + time;
+      for (i in array) {
+        if (startTime >= array[i].start && startTime < array[i].end) {
+          return true;
+        } else if (endTime > array[i].start && endTime <= array[i].end) {
+          return true;
+        }
+      }
+      return false;
+    },
+    overlapUpdate() {
+      let i;
+      let array = this.calendarOptions.events;
+      let startTime = this.newEvent.start + ' ' + this.newEvent.startTime;
+      let end = new Date("2020-10-10" + ' ' + this.newEvent.startTime);
+      end.setMinutes(end.getMinutes() + 30);
+      let time = end.toString().split(' ')[4];
+      let endTime = this.newEvent.start + ' ' + time;
+      for (i in array) {
+        if (array[i].id != this.indexToUpdate) {
+          if (startTime >= array[i].start && startTime < array[i].end) {
+            return true;
+          } else if (endTime > array[i].start && endTime <= array[i].end) {
+            return true;
+          }
+        }
+      }
+      return false;
     }
   },
   watch: {
