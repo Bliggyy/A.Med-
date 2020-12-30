@@ -18,7 +18,8 @@ to wait for their account to be verified
 past appointments
 
 How to install files and all dependencies:
+- create a db called test
 - npm install
 - composter intall
-
+- php artisan migrate
 
