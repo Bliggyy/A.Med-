@@ -7,7 +7,7 @@ There is however still room for improvement and I'd like to note down some of th
 - addition of a notification area where a patient will be notified if their booked 
 appointment has either been approved or denied. For the doctors, they will be 
 notified if a patient user has booked an appointment
-- addition of an admin account and admin page that verifies doctor accounts
+- addition of an admin account and admin page that verifies doctor accounts and is able to access/view all user accounts
 - properly set up the doctor verification so that the doctor is not yet "registered"
 after clicking on the register button and instead sent to a screen that tells them
 to wait for their account to be verified
@@ -16,6 +16,9 @@ to wait for their account to be verified
 - add deletion/disabling of accounts
 - create an appointment list for both doctors and patients and as well as a history of 
 past appointments
+- make adjustments to the appointment system
+  - the error code, most prefrerably show the time slots that are available after an error
+- fix bugs
 
 How to install files and all dependencies:
 - create a db called test
