@@ -10,6 +10,7 @@
     <h1>V E R I F I C A T I O N</h1>
     <div class="login_bx">
         <p>Requirements:</p>
+        <p>Please attach .jpg files</p>
         <form method="POST" action="docverifycreate" onclick="/home" enctype="multipart/form-data">
             @csrf
             <table style="width: 100%"> 

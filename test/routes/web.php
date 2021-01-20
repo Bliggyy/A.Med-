@@ -5,6 +5,7 @@ use App\Http\Controllers\DocVerifyController;
 use App\Http\Controllers\PprofileController;
 use App\Http\Controllers\DocprofileController;
 use App\Http\Controllers\PrecordController;
+use App\Http\Controllers\AdminController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -32,6 +33,10 @@ Route::get('/docHome', function() {
     return view('docHome');
 });
 
+Route::get('/admin', function() {
+    return view('admin');
+});
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -43,7 +48,6 @@ Route::post('pprofileupdate',[PprofileController::class,'update']);
 Route::get('docHome',[DocprofileController::class,'index']);
 Route::post('docprofilecreate',[DocprofileController::class,'store']);
 Route::post('docprofileupdate',[DocprofileController::class,'update']);
-// commented this out for now 
-//Route::get('docHome',[PrecordController::class,'index']);
 Route::post('prcreate',[PrecordController::class,'store']);
 Route::post('prupdate',[PrecordController::class,'update']);
+Route::get('admin',[AdminController::class,'index']);
