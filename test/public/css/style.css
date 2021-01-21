@@ -449,3 +449,8 @@ fieldset[disabled] .btn-primary.focus {
 #nav-tabs > li > a {padding: 5px 5px;}
 }
 /* End of Bootstrap */
+
+.verify {
+  height: 300px;
+  width: 300px;
+}

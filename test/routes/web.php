@@ -51,3 +51,4 @@ Route::post('docprofileupdate',[DocprofileController::class,'update']);
 Route::post('prcreate',[PrecordController::class,'store']);
 Route::post('prupdate',[PrecordController::class,'update']);
 Route::get('admin',[AdminController::class,'index']);
+Route::post('verify',[AdminController::class,'verify']);

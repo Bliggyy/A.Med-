@@ -20,17 +20,35 @@ class DocVerifyController extends Controller
      */
     public function store(Request $request)
     {
-        $request->file('doclicense')->move('..\public\uploads');
-        $request->file('boardcert')->move('..\public\uploads');
-        $request->file('diploma')->move('..\public\uploads');
-        $request->file('refcontacts')->move('..\public\uploads');
-
         $dv = new DocVerify;
         $dv->doc_id = auth()->user()->id;
-        $dv->doclicense = $request->doclicense->getClientOriginalName();
-        $dv->boardcert = $request->boardcert->getClientOriginalName();
-        $dv->diploma = $request->diploma->getClientOriginalName();
-        $dv->refcontacts = $request->refcontacts->getClientOriginalName();
+        $dv->verified = 'no';
+        $dv->email = auth()->user()->email;
+
+        $file = $request->file('doclicense');
+        $extension = $file->getClientOriginalExtension();
+        $filename = time() . '.' . $extension;
+        $file->move('..\public\uploads', $filename);
+        $dv->doclicense = $filename;
+
+        $file = $request->file('boardcert');
+        $extension = $file->getClientOriginalExtension();
+        $filename = time() . '.' . $extension;
+        $file->move('..\public\uploads', $filename);
+        $dv->boardcert = $filename;
+
+        $file = $request->file('diploma');
+        $extension = $file->getClientOriginalExtension();
+        $filename = time() . '.' . $extension;
+        $file->move('..\public\uploads', $filename);
+        $dv->diploma = $filename;
+
+        $file = $request->file('refcontacts');
+        $extension = $file->getClientOriginalExtension();
+        $filename = time() . '.' . $extension;
+        $file->move('..\public\uploads', $filename);
+        $dv->refcontacts = $filename;
+
         $dv->save();
 
         return redirect('/docHome');

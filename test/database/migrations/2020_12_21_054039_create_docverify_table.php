@@ -17,6 +17,9 @@ class CreateDocverifyTable extends Migration
             $table->id();
             $table->unsignedBigInteger('doc_id')->nullable();
             $table->foreign('doc_id')->references('id')->on('users');
+            $table->string('verified');
+            $table->string('email');
+            $table->foreign('email')->references('email')->on('users');
             $table->string('doclicense');
             $table->string('boardcert');
             $table->string('diploma');
