@@ -25,7 +25,7 @@
         <div class="tab-content" id="tab-content">
             <!-- Tab 1 -->
             <div role="tabpanel" class="tab-pane active" id="home">
-              <calendar-component id="{{ auth()->user()->id }}" acc_type="{{ auth()->user()->account_type }}"/>
+              <calendar-component id="{{ auth()->user()->id }}" acc_type="{{ auth()->user()->account_type }}" />
             </div>
             <!-- End Tab 1 -->
 
@@ -35,16 +35,17 @@
                 @foreach($data as $data)
                 @if($data->doc_id == auth()->user()->id)
                     <center>
-                      Name: {{$data->lname}}, {{$data->fname}}<br>
-                      E-mail: {{$data->doc_email}}<br>
-                      Age: {{$data->age}}<br>
-                      Sex: {{$data->sex}}<br>
-                      Birth Date:  {{$data->bdate}}<br>
-                      Phone Number: {{$data->pnumber}}<br>
-                      Clinic Address: {{$data->clinicadd}}<br><br>
-                      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter2">
-                          Update Profile
-                      </button><br>
+                    Name: {{$data->lname}}, {{$data->fname}}<br>
+                    Specialization: {{$data->specialization}}<br>
+                    E-mail: {{$data->doc_email}}<br>
+                    Age: {{$data->age}}<br>
+                    Sex: {{$data->sex}}<br>
+                    Birth Date:  {{$data->bdate}}<br>
+                    Phone Number: {{$data->pnumber}}<br>
+                    Clinic Address: {{$data->clinicadd}}<br><br>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter2">
+                        Update Profile
+                    </button><br>
                     <hr></center>
                     <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -56,12 +57,29 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form method="POST" action="docprofileupdate">
+                                <form method="POST" action="{{ route('docprofileupdate', $data->id ) }}">
+                                    @method('PATCH')
                                     @csrf
-                                    <input type="hidden" name="doc_id" value="{{$data['doc_id']}}">
+                                    <!-- <input type="hidden" name="doc_id" value="{{$data['doc_id']}}"> -->
                                     <input id="lname" type="text" class="login_inp" name="lname" value="{{ $data['lname'] }}" placeholder="Last Name" required>
                                     <input id="fname" type="text" class="login_inp" name="fname" value="{{ $data['fname'] }}" placeholder="First Name" required>
                                     <input id="age" type="number" class="login_inp" name="age" value="{{ $data['age'] }}" placeholder="Age" required><br><br>
+                                    <select class="form-control" name="specialization" required>
+                                        <option selected disabled>Select Specialization</option>
+                                        <option value="Cardiologist">Cardiologist</option>
+                                        <option value="Audiologist">Audiologist</option>
+                                        <option value="ENT specialist">ENT specialist</option>
+                                        <option value="Gynaecologist">Gynaecologist</option>
+                                        <option value="Orthopaedic surgeon">Orthopaedic surgeon</option>
+                                        <option value="Paediatrician">Paediatrician</option>
+                                        <option value="Psychiatrists">Psychiatrists</option>
+                                        <option value="Radiologist">Radiologist</option>
+                                        <option value="Pulmonologist">Pulmonologist</option>
+                                        <option value="Endocrinologist">Endocrinologist</option>
+                                        <option value="Oncologist">Oncologist</option>
+                                        <option value="Neurologist">Neurologist</option>
+                                        <option value="Cardiothoracic surgeon">Cardiothoracic surgeon</option>
+                                    </select><br>
                                     <select class="form-control" name="sex" required>
                                         <option selected disabled>Sex</option>
                                         <option value="M">Male</option>
@@ -81,10 +99,11 @@
                 @endif
                 @endforeach
                 @endif
-
-                <center><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-                    Create Profile
-                </button></center>
+                @if (!@isset($data->fname))
+                    <center><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                        Create Profile
+                    </button></center>
+                @endif
                 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
@@ -99,7 +118,23 @@
                                 @csrf
                                 <input id="lname" type="text" class="login_inp" name="lname" value="{{ old('lname') }}" placeholder="Last Name" required>
                                 <input id="fname" type="text" class="login_inp" name="fname" value="{{ old('fname') }}" placeholder="First Name" required>
-                                <input id="age" type="number" class="login_inp" name="age" value="{{ old('age') }}" placeholder="Age" required><br><br>
+                                <input id="age" type="number" class="login_inp" name="age" value="{{ old('age') }}" placeholder="Age" required>
+                                <select class="form-control" name="specialization" required>
+                                    <option selected disabled>Select Specialization</option>
+                                    <option value="Cardiologist">Cardiologist</option>
+                                    <option value="Audiologist">Audiologist</option>
+                                    <option value="ENT specialist">ENT specialist</option>
+                                    <option value="Gynaecologist">Gynaecologist</option>
+                                    <option value="Orthopaedic surgeon">Orthopaedic surgeon</option>
+                                    <option value="Paediatrician">Paediatrician</option>
+                                    <option value="Psychiatrists">Psychiatrists</option>
+                                    <option value="Radiologist">Radiologist</option>
+                                    <option value="Pulmonologist">Pulmonologist</option>
+                                    <option value="Endocrinologist">Endocrinologist</option>
+                                    <option value="Oncologist">Oncologist</option>
+                                    <option value="Neurologist">Neurologist</option>
+                                    <option value="Cardiothoracic surgeon">Cardiothoracic surgeon</option>
+                                </select><br><br>
                                 <select class="form-control" name="sex" required>
                                     <option selected disabled>Sex</option>
                                     <option value="M">Male</option>
@@ -184,7 +219,8 @@
                               </button>
                           </div>
                           <div class="modal-body">
-                              <form method="POST" action="prupdate">
+                              <form method="POST" action="{{ route('prupdate', $data2->id) }}">
+                                  @method('PATCH')
                                   @csrf
                                   <input type="hidden" name="p_id" value="{{$data2['p_id']}}">
                                   <input id="p_email" type="text" class="login_inp" name="p_email" value="{{ $data2['p_email'] }}" placeholder="Patient's E-mail" required>

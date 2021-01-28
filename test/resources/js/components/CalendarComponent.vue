@@ -4,27 +4,46 @@
       <div class="col-md-8">
         <form @submit.prevent>
           <div class="form-group">
+            <label for="specialization">Specialization</label>
+            <select class="form-control" name="specialization" v-model="specialization" required>
+              <option selected disabled>Select Specialization</option>
+              <option value="Cardiologist">Cardiologist</option>
+              <option value="Audiologist">Audiologist</option>
+              <option value="ENT specialist">ENT specialist</option>
+              <option value="Gynaecologist">Gynaecologist</option>
+              <option value="Orthopaedic surgeon">Orthopaedic surgeon</option>
+              <option value="Paediatrician">Paediatrician</option>
+              <option value="Psychiatrists">Psychiatrists</option>
+              <option value="Radiologist">Radiologist</option>
+              <option value="Pulmonologist">Pulmonologist</option>
+              <option value="Endocrinologist">Endocrinologist</option>
+              <option value="Oncologist">Oncologist</option>
+              <option value="Neurologist">Neurologist</option>
+              <option value="Cardiothoracic surgeon">Cardiothoracic surgeon</option>
+            </select>
+          </div>
+          <div class="form-group">
             <label for="doctors">Doctor List</label>
-            <select class="form-control" name="name_of_movie" v-model="newEvent.doc_id">
+            <select class="form-control" name="doctor_list" v-model="newEvent.doc_id" :disabled="docListActivated == 1" required>
               <option selected disabled>Choose a doctor</option>
-              <option v-for="doctor in doctorList" :key="doctor.id" :value="doctor.doc_id" @click="getDocEvent">{{ doctor.lname }}, {{ doctor.fname }}</option>
+              <option v-for="doctor in doctor_List" :key="doctor.id" :value="doctor.doc_id" @click="getDocEvent">{{ doctor.lname }}, {{ doctor.fname }}</option>
             </select>
           </div>
           <div class="form-group">
             <label for="title">Appointment Name</label>
-            <input type="text" id="title" class="form-control" v-model="newEvent.title">
+            <input type="text" id="title" class="form-control" v-model="newEvent.title" required>
           </div>
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <label for="start">Date</label>
-                <input type="date" id="start" class="form-control" v-model="newEvent.start">
+                <input type="date" id="start" class="form-control" v-model="newEvent.start" required>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
                 <label for="startTime">Time</label>
-                <input type="time" id="startTime" class="form-control" v-model="newEvent.startTime">
+                <input type="time" id="startTime" class="form-control" v-model="newEvent.startTime" required>
               </div>
             </div>
             <div class="col-md-6 mb-4" v-if="addingMode">
@@ -78,6 +97,7 @@ export default {
         eventClick: this.showEventCheck,
         events: []
       },
+      allEvents: [],
       newEvent: {
         title: "",
         doc_id: "",
@@ -90,16 +110,18 @@ export default {
         {
           doc_id: "",
           fname: "",
-          lname: ""
+          lname: "",
+          specialization: ""
         }
       ],
+      specialization: "",
       addingMode: true,
       indexToUpdate: ""
     };
   },
   mounted() {
-    //this.getEvents();
     this.docList();
+    this.getEvents();
   },
   methods: {
     addNewEvent() {
@@ -111,7 +133,8 @@ export default {
         })
         .then(data => {
           this.getDocEvent(); // update our list of events
-          this.resetForm(); // clear newEvent properties (e.g. title, start and end)
+          this.getEvents(); // updates all events
+          //this.resetForm(); // clear newEvent properties (e.g. title, start and end)
         })
         .catch(err =>
           console.log("Unable to add new event!", err.response.data)
@@ -119,17 +142,18 @@ export default {
       } else {
         alert('You cannot add events on the same time and day. Please choose a different time');
       }
+      
     },
     showEventCheck(arg) {
       console.log(arg.event._def.extendedProps.user_id);
-      if (this.$props.acc_type == "doctor") {
+      if (this.$props.acc_type == "doctor") { // this checks if doctor owns said appointment
         if (this.$props.id == arg.event._def.extendedProps.doc_id) {
           this.showEvent(arg);
         } else {
           this.addingMode = true;
         }
       } else {
-        if (this.$props.id == arg.event._def.extendedProps.user_id) {
+        if (this.$props.id == arg.event._def.extendedProps.user_id) { // checks if patient owns said appointment
           this.showEvent(arg);
         } else {
           this.addingMode = true;
@@ -138,11 +162,11 @@ export default {
     },
     showEvent(arg) {
       this.addingMode = false;
-        const { id, title, start, end } = this.calendarOptions.events.find(
+        const { id, title, start, end } = this.calendarOptions.events.find( // find certain event in list
           event => event.id === +arg.event.id
         );
         this.indexToUpdate = id;
-        this.newEvent = {
+        this.newEvent = { // fills up the input fields
           title: title,
           start: start.split(' ')[0],
           doc_id: this.newEvent.doc_id,
@@ -160,6 +184,7 @@ export default {
         .then(data => {
           this.resetForm();
           this.getDocEvent();
+          this.getEvents();
           this.addingMode = true;
         })
         .catch(err =>
@@ -176,62 +201,65 @@ export default {
         .then(response => {
           this.resetForm();
           this.getDocEvent();
+          this.getEvents();
           this.addingMode = true;
         })
         .catch(err =>
           console.log("Unable to delete event!", err.response.data)
         );
     },
-    getEvents() {
+    getEvents() { // gets all appointments regardless of which doctor is chosen
       axios
         .get("/api/appointment")
-        .then(response => (this.calendarOptions.events = response.data.data))
+        .then(response => (this.allEvents = response.data.data))
         .catch(err => console.log(err.response.data));
     },
-    getDocEvent() {
+    getDocEvent(arg) { // fetches all events related to said doctor
       this.addingMode = true;
       axios
         .get("/api/appointment/" + this.newEvent.doc_id)
           .then(response => {
-            this.resetForm();
+            //this.resetForm();
             this.calendarOptions.events = {};
             this.calendarOptions.events = response.data.data;
           })
           .catch(err => console.log(err.response.data));
     },
-    docList() {
+    docList() { // gets all doctors
       axios
         .get("api/list")
         .then(response => (this.doctorList = response.data.data))
         .catch(err => console.log(err.response.data));
     },
-    resetForm() {
+    resetForm() { // clears all input fields
       Object.keys(this.newEvent).forEach(key => {
         if (this.newEvent[key] != this.newEvent.doc_id) {
           return (this.newEvent[key] = "");
         }
       });
     },
-    overlap() {
+    overlap() { // checks if events overlap each other
       let i;
-      let array = this.calendarOptions.events;
+      let array = this.allEvents;
       let startTime = this.newEvent.start + ' ' + this.newEvent.startTime;
       let end = new Date("2020-10-10" + ' ' + this.newEvent.startTime);
       end.setMinutes(end.getMinutes() + 30);
       let time = end.toString().split(' ')[4];
       let endTime = this.newEvent.start + ' ' + time;
       for (i in array) {
-        if (startTime >= array[i].start && startTime < array[i].end) {
-          return true;
-        } else if (endTime > array[i].start && endTime <= array[i].end) {
-          return true;
+        if (this.$props.id == array[i].user_id) {
+          if (startTime >= array[i].start && startTime < array[i].end) {
+            return true;
+          } else if (endTime > array[i].start && endTime <= array[i].end) {
+            return true;
+          }
         }
       }
       return false;
     },
-    overlapUpdate() {
+    overlapUpdate() { // checks if events overlap each other when updating
       let i;
-      let array = this.calendarOptions.events;
+      let array = this.allEvents;
       let startTime = this.newEvent.start + ' ' + this.newEvent.startTime;
       let end = new Date("2020-10-10" + ' ' + this.newEvent.startTime);
       end.setMinutes(end.getMinutes() + 30);
@@ -239,10 +267,12 @@ export default {
       let endTime = this.newEvent.start + ' ' + time;
       for (i in array) {
         if (array[i].id != this.indexToUpdate) {
-          if (startTime >= array[i].start && startTime < array[i].end) {
-            return true;
-          } else if (endTime > array[i].start && endTime <= array[i].end) {
-            return true;
+          if (this.$props.id == array[i].user_id) {
+            if (startTime >= array[i].start && startTime < array[i].end) {
+              return true;
+            } else if (endTime > array[i].start && endTime <= array[i].end) {
+              return true;
+            }
           }
         }
       }
@@ -252,6 +282,26 @@ export default {
   watch: {
     indexToUpdate() {
       return this.indexToUpdate;
+    }
+  },
+  computed: {
+    doctor_List: function() { // filters doctors to match the specialization chosen
+      let i;
+      let retVal = [];
+      let array = this.doctorList
+      for (i in array) {
+        if (array[i].specialization == this.specialization) {
+          retVal.push(array[i]);
+        }
+      }
+      return retVal;
+    },
+    docListActivated: function() { // simply enables/disables doctor dropdown list
+      if (this.doctor_List === undefined || this.doctor_List.length == 0) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 };

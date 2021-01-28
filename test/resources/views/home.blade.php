@@ -55,21 +55,22 @@
                               </button>
                           </div>
                           <div class="modal-body">
-                              <form method="POST" action="pprofileupdate">
-                                  @csrf
-                                  <input type="hidden" name="p_id" value="{{$data3['p_id']}}">
-                                  <input id="lname" type="text" class="login_inp" name="lname" value="{{ $data3['lname'] }}" placeholder="Last Name" required>
-                                  <input id="fname" type="text" class="login_inp" name="fname" value="{{ $data3['fname'] }}" placeholder="First Name" required>
-                                  <input id="age" type="number" class="login_inp" name="age" value="{{ $data3['age'] }}" placeholder="Age" required><br><br>
-                                  <select class="form-control" name="sex" required>
-                                      <option selected disabled>Sex</option>
-                                      <option value="M">Male</option>
-                                      <option value="F">Female</option>
-                                  </select><br>
-                                  <h5 class="modal-title" id="exampleModalLongTitle">Birth Date:</h5>
-                                  <input id="bdate" type="date" class="login_inp" name="bdate" value="{{ $data3['bdate'] }}" placeholder="Birth Date" required>
-                                  <input id="pnumber" type="text" class="login_inp" name="pnumber" value="{{ $data3['pnumber'] }}" placeholder="Phone Number" required>
-                                  <input type="submit" value="Submit" name="submit" class="login_sub">
+                              <form method="POST" action="{{ route('pprofileupdate', $data3->id) }}">
+                                @method('PATCH')
+                                @csrf
+                                <input type="hidden" name="p_id" value="{{$data3['p_id']}}">
+                                <input id="lname" type="text" class="login_inp" name="lname" value="{{ $data3['lname'] }}" placeholder="Last Name" required>
+                                <input id="fname" type="text" class="login_inp" name="fname" value="{{ $data3['fname'] }}" placeholder="First Name" required>
+                                <input id="age" type="number" class="login_inp" name="age" value="{{ $data3['age'] }}" placeholder="Age" required><br><br>
+                                <select class="form-control" name="sex" required>
+                                    <option selected disabled>Sex</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                </select><br>
+                                <h5 class="modal-title" id="exampleModalLongTitle">Birth Date:</h5>
+                                <input id="bdate" type="date" class="login_inp" name="bdate" value="{{ $data3['bdate'] }}" placeholder="Birth Date" required>
+                                <input id="pnumber" type="text" class="login_inp" name="pnumber" value="{{ $data3['pnumber'] }}" placeholder="Phone Number" required>
+                                <input type="submit" value="Submit" name="submit" class="login_sub">
                               </form>
                           </div>
                          </div>
@@ -79,35 +80,36 @@
                 @endif
                 @endforeach
                 @endif  
-
-                <center><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-                    Create Profile
-                </button></center>
+                @if (!@isset($data3->fname))
+                  <center><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                      Create Profile
+                  </button></center>
+                @endif
                 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
-                              <h5 class="modal-title" id="exampleModalLongTitle">Create Profile</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                              </button>
+                            <h5 class="modal-title" id="exampleModalLongTitle">Create Profile</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
                           </div>
                           <div class="modal-body">
-                              <form method="POST" action="pprofilecreate">
-                                  @csrf
-                                  <input id="lname" type="text" class="login_inp" name="lname" value="{{ old('lname') }}" placeholder="Last Name" required>
-                                  <input id="fname" type="text" class="login_inp" name="fname" value="{{ old('fname') }}" placeholder="First Name" required>
-                                  <input id="age" type="number" class="login_inp" name="age" value="{{ old('age') }}" placeholder="Age" required><br><br>
-                                  <select class="form-control" name="sex" required>
-                                      <option selected disabled>Sex</option>
-                                      <option value="M">Male</option>
-                                      <option value="F">Female</option>
-                                  </select><br>
-                                  <h5 class="modal-title" id="exampleModalLongTitle">Birth Date:</h5>
-                                  <input id="bdate" type="date" class="login_inp" name="bdate" value="{{ old('bdate') }}" placeholder="Birth Date" required>
-                                  <input id="pnumber" type="text" class="login_inp" name="pnumber" value="{{ old('pnumber') }}" placeholder="Phone Number" required>
-                                  <input type="submit" value="Submit" name="submit" class="login_sub">
-                              </form>
+                            <form method="POST" action="pprofilecreate">
+                              @csrf
+                              <input id="lname" type="text" class="login_inp" name="lname" value="{{ old('lname') }}" placeholder="Last Name" required>
+                              <input id="fname" type="text" class="login_inp" name="fname" value="{{ old('fname') }}" placeholder="First Name" required>
+                              <input id="age" type="number" class="login_inp" name="age" value="{{ old('age') }}" placeholder="Age" required><br><br>
+                              <select class="form-control" name="sex" required>
+                                <option selected disabled>Sex</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                              </select><br>
+                              <h5 class="modal-title" id="exampleModalLongTitle">Birth Date:</h5>
+                              <input id="bdate" type="date" class="login_inp" name="bdate" value="{{ old('bdate') }}" placeholder="Birth Date" required>
+                              <input id="pnumber" type="text" class="login_inp" name="pnumber" value="{{ old('pnumber') }}" placeholder="Phone Number" required>
+                              <input type="submit" value="Submit" name="submit" class="login_sub">
+                            </form>
                           </div>
                         </div>
                     </div>

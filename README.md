@@ -19,6 +19,7 @@ past appointments
 - make adjustments to the appointment system
   - the error code, most prefrerably show the time slots that are available after an error
 - fix bugs
+- create modals that display errors or warnings or success messages rather than using the standard alert text boxes 
 
 How to install files and all dependencies:
 - create a db called test

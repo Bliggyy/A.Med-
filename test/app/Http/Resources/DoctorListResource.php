@@ -17,7 +17,8 @@ class DoctorListResource extends JsonResource
         return [
           'doc_id' => $this->doc_id,
           'lname' => $this->lname,
-          'fname' => $this->fname  
+          'fname' => $this->fname,
+          'specialization' => $this->specialization
         ];
     }
 }

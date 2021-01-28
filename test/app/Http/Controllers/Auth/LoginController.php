@@ -31,10 +31,11 @@ class LoginController extends Controller
     {
         if (auth()->user()->account_type == "doctor") {
             return '/docHome';
+        } else if (auth()->user()->account_type == "admin") {
+            return '/admin';
         } else {
             return '/home';
-            
-        };
+        }
     }
 
     /**

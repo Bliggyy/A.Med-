@@ -19370,6 +19370,25 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -19399,6 +19418,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         eventClick: this.showEventCheck,
         events: []
       },
+      allEvents: [],
       newEvent: {
         title: "",
         doc_id: "",
@@ -19410,15 +19430,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       doctorList: [{
         doc_id: "",
         fname: "",
-        lname: ""
+        lname: "",
+        specialization: ""
       }],
+      specialization: "",
       addingMode: true,
       indexToUpdate: ""
     };
   },
   mounted: function mounted() {
-    //this.getEvents();
     this.docList();
+    this.getEvents();
   },
   methods: {
     addNewEvent: function addNewEvent() {
@@ -19429,7 +19451,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           _this.getDocEvent(); // update our list of events
 
 
-          _this.resetForm(); // clear newEvent properties (e.g. title, start and end)
+          _this.getEvents(); // updates all events
+          //this.resetForm(); // clear newEvent properties (e.g. title, start and end)
 
         })["catch"](function (err) {
           return console.log("Unable to add new event!", err.response.data);
@@ -19442,6 +19465,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       console.log(arg.event._def.extendedProps.user_id);
 
       if (this.$props.acc_type == "doctor") {
+        // this checks if doctor owns said appointment
         if (this.$props.id == arg.event._def.extendedProps.doc_id) {
           this.showEvent(arg);
         } else {
@@ -19449,6 +19473,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
       } else {
         if (this.$props.id == arg.event._def.extendedProps.user_id) {
+          // checks if patient owns said appointment
           this.showEvent(arg);
         } else {
           this.addingMode = true;
@@ -19458,7 +19483,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     showEvent: function showEvent(arg) {
       this.addingMode = false;
 
-      var _this$calendarOptions = this.calendarOptions.events.find(function (event) {
+      var _this$calendarOptions = this.calendarOptions.events.find( // find certain event in list
+      function (event) {
         return event.id === +arg.event.id;
       }),
           id = _this$calendarOptions.id,
@@ -19468,6 +19494,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       this.indexToUpdate = id;
       this.newEvent = {
+        // fills up the input fields
         title: title,
         start: start.split(' ')[0],
         doc_id: this.newEvent.doc_id,
@@ -19485,6 +19512,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
           _this2.getDocEvent();
 
+          _this2.getEvents();
+
           _this2.addingMode = true;
         })["catch"](function (err) {
           return console.log("Unable to update event!", err.response.data);
@@ -19501,6 +19530,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         _this3.getDocEvent();
 
+        _this3.getEvents();
+
         _this3.addingMode = true;
       })["catch"](function (err) {
         return console.log("Unable to delete event!", err.response.data);
@@ -19509,19 +19540,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     getEvents: function getEvents() {
       var _this4 = this;
 
+      // gets all appointments regardless of which doctor is chosen
       axios__WEBPACK_IMPORTED_MODULE_5___default.a.get("/api/appointment").then(function (response) {
-        return _this4.calendarOptions.events = response.data.data;
+        return _this4.allEvents = response.data.data;
       })["catch"](function (err) {
         return console.log(err.response.data);
       });
     },
-    getDocEvent: function getDocEvent() {
+    getDocEvent: function getDocEvent(arg) {
       var _this5 = this;
 
+      // fetches all events related to said doctor
       this.addingMode = true;
       axios__WEBPACK_IMPORTED_MODULE_5___default.a.get("/api/appointment/" + this.newEvent.doc_id).then(function (response) {
-        _this5.resetForm();
-
+        //this.resetForm();
         _this5.calendarOptions.events = {};
         _this5.calendarOptions.events = response.data.data;
       })["catch"](function (err) {
@@ -19531,6 +19563,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     docList: function docList() {
       var _this6 = this;
 
+      // gets all doctors
       axios__WEBPACK_IMPORTED_MODULE_5___default.a.get("api/list").then(function (response) {
         return _this6.doctorList = response.data.data;
       })["catch"](function (err) {
@@ -19540,6 +19573,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     resetForm: function resetForm() {
       var _this7 = this;
 
+      // clears all input fields
       Object.keys(this.newEvent).forEach(function (key) {
         if (_this7.newEvent[key] != _this7.newEvent.doc_id) {
           return _this7.newEvent[key] = "";
@@ -19547,8 +19581,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     },
     overlap: function overlap() {
+      // checks if events overlap each other
       var i;
-      var array = this.calendarOptions.events;
+      var array = this.allEvents;
       var startTime = this.newEvent.start + ' ' + this.newEvent.startTime;
       var end = new Date("2020-10-10" + ' ' + this.newEvent.startTime);
       end.setMinutes(end.getMinutes() + 30);
@@ -19556,18 +19591,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var endTime = this.newEvent.start + ' ' + time;
 
       for (i in array) {
-        if (startTime >= array[i].start && startTime < array[i].end) {
-          return true;
-        } else if (endTime > array[i].start && endTime <= array[i].end) {
-          return true;
+        if (this.$props.id == array[i].user_id) {
+          if (startTime >= array[i].start && startTime < array[i].end) {
+            return true;
+          } else if (endTime > array[i].start && endTime <= array[i].end) {
+            return true;
+          }
         }
       }
 
       return false;
     },
     overlapUpdate: function overlapUpdate() {
+      // checks if events overlap each other when updating
       var i;
-      var array = this.calendarOptions.events;
+      var array = this.allEvents;
       var startTime = this.newEvent.start + ' ' + this.newEvent.startTime;
       var end = new Date("2020-10-10" + ' ' + this.newEvent.startTime);
       end.setMinutes(end.getMinutes() + 30);
@@ -19576,10 +19614,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       for (i in array) {
         if (array[i].id != this.indexToUpdate) {
-          if (startTime >= array[i].start && startTime < array[i].end) {
-            return true;
-          } else if (endTime > array[i].start && endTime <= array[i].end) {
-            return true;
+          if (this.$props.id == array[i].user_id) {
+            if (startTime >= array[i].start && startTime < array[i].end) {
+              return true;
+            } else if (endTime > array[i].start && endTime <= array[i].end) {
+              return true;
+            }
           }
         }
       }
@@ -19590,6 +19630,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   watch: {
     indexToUpdate: function indexToUpdate() {
       return this.indexToUpdate;
+    }
+  },
+  computed: {
+    doctor_List: function doctor_List() {
+      // filters doctors to match the specialization chosen
+      var i;
+      var retVal = [];
+      var array = this.doctorList;
+
+      for (i in array) {
+        if (array[i].specialization == this.specialization) {
+          retVal.push(array[i]);
+        }
+      }
+
+      return retVal;
+    },
+    docListActivated: function docListActivated() {
+      // simply enables/disables doctor dropdown list
+      if (this.doctor_List === undefined || this.doctor_List.length == 0) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 });
@@ -24112,7 +24176,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* @import \"~@fullcalendar/core/main.css\";\r\n@import \"~@fullcalendar/daygrid/main.css\"; */\n.fc-title {\r\n  color: #fff;\n}\n.fc-title:hover {\r\n  cursor: pointer;\n}\r\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* @import \"~@fullcalendar/core/main.css\";\r\n@import \"~@fullcalendar/daygrid/main.css\"; */\n.fc-title {\r\n  color: #fff;\n}\n.fc-title:hover {\r\n  cursor: pointer;\n}\r\n", ""]);
 
 // exports
 
@@ -70282,6 +70346,100 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "specialization" } }, [
+                _vm._v("Specialization")
+              ]),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.specialization,
+                      expression: "specialization"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { name: "specialization", required: "" },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.specialization = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    }
+                  }
+                },
+                [
+                  _c("option", { attrs: { selected: "", disabled: "" } }, [
+                    _vm._v("Select Specialization")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "Cardiologist" } }, [
+                    _vm._v("Cardiologist")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "Audiologist" } }, [
+                    _vm._v("Audiologist")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "ENT specialist" } }, [
+                    _vm._v("ENT specialist")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "Gynaecologist" } }, [
+                    _vm._v("Gynaecologist")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "Orthopaedic surgeon" } }, [
+                    _vm._v("Orthopaedic surgeon")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "Paediatrician" } }, [
+                    _vm._v("Paediatrician")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "Psychiatrists" } }, [
+                    _vm._v("Psychiatrists")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "Radiologist" } }, [
+                    _vm._v("Radiologist")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "Pulmonologist" } }, [
+                    _vm._v("Pulmonologist")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "Endocrinologist" } }, [
+                    _vm._v("Endocrinologist")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "Oncologist" } }, [
+                    _vm._v("Oncologist")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "Neurologist" } }, [
+                    _vm._v("Neurologist")
+                  ]),
+                  _vm._v(" "),
+                  _c("option", { attrs: { value: "Cardiothoracic surgeon" } }, [
+                    _vm._v("Cardiothoracic surgeon")
+                  ])
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group" }, [
               _c("label", { attrs: { for: "doctors" } }, [
                 _vm._v("Doctor List")
               ]),
@@ -70298,7 +70456,11 @@ var render = function() {
                     }
                   ],
                   staticClass: "form-control",
-                  attrs: { name: "name_of_movie" },
+                  attrs: {
+                    name: "doctor_list",
+                    disabled: _vm.docListActivated == 1,
+                    required: ""
+                  },
                   on: {
                     change: function($event) {
                       var $$selectedVal = Array.prototype.filter
@@ -70324,7 +70486,7 @@ var render = function() {
                     _vm._v("Choose a doctor")
                   ]),
                   _vm._v(" "),
-                  _vm._l(_vm.doctorList, function(doctor) {
+                  _vm._l(_vm.doctor_List, function(doctor) {
                     return _c(
                       "option",
                       {
@@ -70359,7 +70521,7 @@ var render = function() {
                   }
                 ],
                 staticClass: "form-control",
-                attrs: { type: "text", id: "title" },
+                attrs: { type: "text", id: "title", required: "" },
                 domProps: { value: _vm.newEvent.title },
                 on: {
                   input: function($event) {
@@ -70390,7 +70552,7 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: { type: "date", id: "start" },
+                      attrs: { type: "date", id: "start", required: "" },
                       domProps: { value: _vm.newEvent.start },
                       on: {
                         input: function($event) {
@@ -70420,7 +70582,7 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: { type: "time", id: "startTime" },
+                      attrs: { type: "time", id: "startTime", required: "" },
                       domProps: { value: _vm.newEvent.startTime },
                       on: {
                         input: function($event) {

@@ -21,6 +21,7 @@ class CreateDocprofileTable extends Migration
             $table->foreign('doc_email')->references('email')->on('users');
             $table->string('lname');
             $table->string('fname');
+            $table->string('specialization');
             $table->integer('age');
             $table->string('sex');
             $table->date('bdate');

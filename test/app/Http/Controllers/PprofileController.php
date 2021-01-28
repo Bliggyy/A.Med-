@@ -37,9 +37,9 @@ class PprofileController extends Controller
         return redirect('/home');
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $pp = Pprofile::find($request->p_id);
+        $pp = Pprofile::find($id);
         $pp->lname = $request->lname;
         $pp->fname = $request->fname;
         $pp->age = $request->age;

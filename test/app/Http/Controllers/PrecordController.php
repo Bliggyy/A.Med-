@@ -35,9 +35,9 @@ class PrecordController extends Controller
         return redirect('/docHome');
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $pr = Precord::find($request->p_email);
+        $pr = Precord::find($id);
         $pr->blood_type = $request->blood_type;
         $pr->last_visit = $request->last_visit;
         $pr->major_illnesses = $request->major_illnesses;

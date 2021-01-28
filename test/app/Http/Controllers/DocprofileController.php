@@ -12,7 +12,7 @@ class DocprofileController extends Controller
 {
     public function index()
     {
-        $data = Docprofile::all();
+        $data = Docprofile::where('doc_id', auth()->user()->id)->get();
         $data2 = Precord::all();
         $data3 = Pprofile::all();
         return view('docHome', compact('data','data2','data3'));
@@ -30,6 +30,7 @@ class DocprofileController extends Controller
         $dp->doc_email = auth()->user()->email;
         $dp->lname = $request->lname;
         $dp->fname = $request->fname;
+        $dp->specialization = $request->specialization;
         $dp->age = $request->age;
         $dp->sex = $request->sex;
         $dp->bdate = $request->bdate;
@@ -40,11 +41,12 @@ class DocprofileController extends Controller
         return redirect('/docHome');
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $dp = Docprofile::find($request->doc_id);
+        $dp = Docprofile::find($id);
         $dp->lname = $request->lname;
         $dp->fname = $request->fname;
+        $dp->specialization = $request->specialization;
         $dp->age = $request->age;
         $dp->sex = $request->sex;
         $dp->bdate = $request->bdate;
