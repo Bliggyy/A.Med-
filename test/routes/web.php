@@ -51,4 +51,4 @@ Route::patch('docprofileupdate/{id}',[DocprofileController::class,'update'])->na
 Route::post('prcreate',[PrecordController::class,'store']);
 Route::patch('prupdate/{id}',[PrecordController::class,'update'])->name('prupdate');
 Route::get('admin',[AdminController::class,'index']);
-Route::post('verify',[AdminController::class,'verify']);
+Route::post('verify/{id}',[AdminController::class,'verify'])->name('verify');

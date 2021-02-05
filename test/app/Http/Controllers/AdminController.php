@@ -26,10 +26,10 @@ class AdminController extends Controller
      * @param  array  $data
      * @return \App\Models\DocVerify
      */
-    public function verify(Request $request)
+    public function verify(Request $request, $id)
     {
-        $dv = DocVerify::find($request->id);
-        $dv->verified = $request->verified;
+        $dv = DocVerify::find($id);
+        $dv->verified = $request->value;
         $dv->save();
 
         return redirect('/admin');

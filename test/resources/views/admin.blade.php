@@ -45,10 +45,25 @@
             <center>
               <b>{{$data2->email}}</b><br>
               <b>Verified: {{$data2->verified}}</b><br>
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+              @if($data2->verified == "no")
+              <form method="POST" action="{{ route('verify', $data2->id ) }}">
+                @method('POST')
+                @csrf
+                <input type="hidden" value="yes" name="value">
+                <input type="submit" value="VERIFY" class="btn btn-primary" name="submit" class="login_sub">
+              </form>
+              @elseif($data2->verified == "yes")
+              <form method="POST" action="{{ route('verify', $data2->id ) }}">
+                @method('POST')
+                @csrf
+                <input type="hidden" value="no" name="value">
+                <input type="submit" value="UNVERIFY" class="btn btn-primary" name="submit" class="login_sub">
+              </form>
+              @endif
+              <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
                 VERIFY
-              </button><br>
-              <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              </button><br> -->
+              <!-- <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                      <div class="modal-dialog modal-dialog-centered" role="document">
                          <div class="modal-content">
                           <div class="modal-header">
@@ -58,9 +73,10 @@
                               </button>
                           </div>
                           <div class="modal-body">
-                              <form method="POST" action="verify">
+                              <form method="POST" action="{{ route('verify', $data2->id ) }}">
+                                  @method('PATCH')
                                   @csrf
-                                  <input type="hidden" name="id" value="{{$data2->id}}">
+                                  <input type="text" name="id" value="{{$data2->id}}" placeholder="{{$data2->id}}">
                                   <select class="form-control" name="verified" required>
                                     <option selected disabled>Verify</option>
                                     <option value="yes">Yes</option>
@@ -71,7 +87,8 @@
                           </div>
                           </div>
                       </div>
-                  </div>
+                  </div> -->
+              
               Doctor's License: <br><img class="verify" src="{{ asset('uploads/' . $data2->doclicense) }}" /><br>
               Board Certificate: <br><img class="verify" src="{{ asset('uploads/' . $data2->boardcert) }}" /><br>
               Diploma: <br><img class="verify" src="{{ asset('uploads/' . $data2->diploma) }}" /><br>
