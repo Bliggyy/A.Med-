@@ -451,6 +451,64 @@ fieldset[disabled] .btn-primary.focus {
 /* End of Bootstrap */
 
 .verify {
-  height: 300px;
-  width: 300px;
+  height: 450px;
+  width: 450px;
+}
+
+table.ulist{
+  width: 100%;
+}
+
+.ulist{
+  border: 1px solid black;
+}
+
+.uid{
+  width: 10%;
+  border: 1px solid black;
+}
+
+.uname{
+  width: 40%;
+  border: 1px solid black;
+}
+
+.elist{
+  width: 40%;
+  border: 1px solid black;
+}
+
+.acctype{
+  width: 10%;
+  border: 1px solid black;
+}
+
+.demail{
+  width: 18%;
+  border: 1px solid black;
+}
+
+.vers{
+  width: 18%;
+  border: 1px solid black;
+}
+
+.files{
+  width: 18%;
+  border: 1px solid black;
+}
+
+.ver{
+  width: 18%;
+  border: 1px solid black;
+}
+
+.pname{
+  width: 18%;
+  border: 1px solid black;
+}
+
+.pemail{
+  width: 18%;
+  border: 1px solid black;
 }

@@ -25,105 +25,149 @@
         <div class="tab-content" id="tab-content">
             <!-- Tab 1 -->
             <div role="tabpanel" class="tab-pane active" id="home">
-            @if($data != NULL)
-            @foreach($data as $data)
-            <center>
-              <b>User ID: {{$data->id}}</b><br>
-              Username: {{$data->username}}<br>
-              E-mail: {{$data->email}}<br>
-              Account type: {{$data->account_type}}<br><hr>
-            </center>
-            @endforeach
-            @endif
+              <center><input type="text" name="search" id="search" placeholder="Search..." title="Type in a name"></center><br>
+              <table class="ulist">
+                <td class="uid"><b>User ID</b></td>
+                <td class="uname"><b>Username</b></td>
+                <td class="elist"><b>E-mail</b></td>
+                <td class="acctype"><b>Account type</b></td>
+              </table>
+              <table id="table" class="ulist">
+              @if($data != NULL)
+              @foreach($data as $data)
+              <center>
+                <tr>
+                <td class="uid">{{$data->id}}</td>
+                <td class="uname">{{$data->username}}</td>
+                <td class="elist">{{$data->email}}</td>
+                <td class="acctype">{{$data->account_type}}</td>
+                </tr>
+              </center>
+              @endforeach
+              @endif
+              </table>
             </div>
             <!-- End Tab 1 -->
 
             <!-- Tab 2 -->
             <div role="tabpanel" class="tab-pane" id="profile">
-            @if($data2 != NULL)
-            @foreach($data2 as $data2)
-            <center>
-              <b>{{$data2->email}}</b><br>
-              <b>Verified: {{$data2->verified}}</b><br>
-              @if($data2->verified == "no")
-              <form method="POST" action="{{ route('verify', $data2->id ) }}">
-                @method('POST')
-                @csrf
-                <input type="hidden" value="yes" name="value">
-                <input type="submit" value="VERIFY" class="btn btn-primary" name="submit" class="login_sub">
-              </form>
-              @elseif($data2->verified == "yes")
-              <form method="POST" action="{{ route('verify', $data2->id ) }}">
-                @method('POST')
-                @csrf
-                <input type="hidden" value="no" name="value">
-                <input type="submit" value="UNVERIFY" class="btn btn-primary" name="submit" class="login_sub">
-              </form>
+              <center><input type="text" name="search2" id="search2" placeholder="Search..." title="Type in a name"></center><br>
+              <table class="ulist">
+                <td class="uid"><b>Doctor ID</b></td>
+                <td class="demail"><b>E-mail</b></td>
+                <td class="vers"><b>Verification Status</b></td>
+                <td class="files"><b>Files</b></td>
+                <td class="ver"><b>Verify</b></td>
+              </table>
+              <table id="table2" class="ulist">
+              <tr>
+              @if($data2 != NULL)
+              @foreach($data2 as $data2)
+                <center>
+                <td class="uid">{{$data2->id}}</td>
+                <td class="demail">{{$data2->email}}</td>
+                <td class="vers">{{$data2->verified}}</td>
+                <td class="files">
+                <center><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter-{{$data2->doc_id}}">
+                    Show Files
+                </button></center>
+                <div class="modal fade" id="exampleModalCenter-{{$data2->doc_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Files</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body"><center>
+                          <b>Doctor's License: <br><img class="verify" src="{{ asset('uploads/' . $data2->doclicense) }}" /><br><hr>
+                          Board Certificate: <br><img class="verify" src="{{ asset('uploads/' . $data2->boardcert) }}" /><br><hr>
+                          Diploma: <br><img class="verify" src="{{ asset('uploads/' . $data2->diploma) }}" /><br><hr>
+                          Reference Contacts: <br><img class="verify" src="{{ asset('uploads/' . $data2->refcontacts) }}" /></b>
+                        </center></div>
+                        </div>
+                    </div>
+                </div>
+                </td>
+                @if($data2->verified == "no")
+                <td class="ver"><form method="POST" action="{{ route('verify', $data2->id ) }}">
+                  @method('POST')
+                  @csrf
+                  <input type="hidden" value="yes" name="value">
+                  <center><input type="submit" value="VERIFY" class="btn btn-primary" name="submit" class="login_sub"></center>
+                </form></td></tr>
+                @elseif($data2->verified == "yes")
+                <td class="ver"><form method="POST" action="{{ route('verify', $data2->id ) }}">
+                  @method('POST')
+                  @csrf
+                  <input type="hidden" value="no" name="value">
+                  <center><input type="submit" value="UNVERIFY" class="btn btn-primary" name="submit" class="login_sub"></center>
+                </form></td></tr>
+                @endif
+              </center>
+              @endforeach
               @endif
-              <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-                VERIFY
-              </button><br> -->
-              <!-- <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                     <div class="modal-dialog modal-dialog-centered" role="document">
-                         <div class="modal-content">
-                          <div class="modal-header">
-                              <h5 class="modal-title" id="exampleModalLongTitle">Verify</h5>
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                              </button>
-                          </div>
-                          <div class="modal-body">
-                              <form method="POST" action="{{ route('verify', $data2->id ) }}">
-                                  @method('PATCH')
-                                  @csrf
-                                  <input type="text" name="id" value="{{$data2->id}}" placeholder="{{$data2->id}}">
-                                  <select class="form-control" name="verified" required>
-                                    <option selected disabled>Verify</option>
-                                    <option value="yes">Yes</option>
-                                    <option value="no">No</option>
-                                  </select><br>
-                                  <input type="submit" value="Submit" name="submit" class="login_sub">
-                              </form>
-                          </div>
-                          </div>
-                      </div>
-                  </div> -->
-              
-              Doctor's License: <br><img class="verify" src="{{ asset('uploads/' . $data2->doclicense) }}" /><br>
-              Board Certificate: <br><img class="verify" src="{{ asset('uploads/' . $data2->boardcert) }}" /><br>
-              Diploma: <br><img class="verify" src="{{ asset('uploads/' . $data2->diploma) }}" /><br>
-              Reference Contacts: <br><img class="verify" src="{{ asset('uploads/' . $data2->refcontacts) }}" /><hr><br>
-            </center>
-            @endforeach
-            @endif
+              </table>
             </div>
             <!-- End Tab 2 -->
 
             <!-- Tab 3 -->
             <div role="tabpanel" class="tab-pane" id="messages">
+            <center><input type="text" name="search2" id="search3" placeholder="Search..." title="Type in a name"></center><br>
+            <table class="ulist">
+                <td class="uid"><b>Patient ID</b></td>
+                <td class="pname"><b>Name</b></td>
+                <td class="pemail"><b>E-mail</b></td>
+                <td class="files"><b>Patient Details</b></td>
+              </table>
+            <table id="table3" class="ulist">
+            <tr>
             @if($data4 != NULL)
             @foreach($data4 as $data4)
             @if($data5 != NULL)
             @foreach($data5 as $data5)
             @if($data4->p_email == $data5->p_email)
-            <center>
-              Name: {{$data5->lname}}, {{$data5->fname}}<br>
-              E-mail: {{$data5->p_email}}<br>
-              Age: {{$data5->age}}<br>
-              Sex: {{$data5->sex}}<br>
-              Birth Date:  {{$data5->bdate}}<br>
-              Phone Number: {{$data5->pnumber}}<br>
-              Blood Type: {{$data4->blood_type}}<br>
-              Major Illnesses: {{$data4->major_illnesses}}<br>
-              Allergies: {{$data4->allergies}}<br>
-              Emergency Contact Person: {{$data4->e_contact}}<br>
-              Emergency Contact Number: {{$data4->e_number}}<hr><br>
-            </center>
+              <center>
+              <td class="uid">{{$data4->id}}</td>
+              <td class="pname">{{$data5->lname}}, {{$data5->fname}}</td>
+              <td class="pemail">{{$data5->p_email}}</td>
+              <td class="files">
+                <center><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter2-{{$data2->doc_id}}">
+                    Show Details
+                </button></center>
+                <div class="modal fade" id="exampleModalCenter2-{{$data2->doc_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Patient Details</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body"><center>
+                          <b>Age:</b> {{$data5->age}}<br>
+                          <b>Sex:</b> {{$data5->sex}}<br>
+                          <b>Birth Date:</b>  {{$data5->bdate}}<br>
+                          <b>Phone Number:</b> {{$data5->pnumber}}<br>
+                          <b>Blood Type:</b> {{$data4->blood_type}}<br>
+                          <b>Major Illnesses:</b> {{$data4->major_illnesses}}<br>
+                          <b>Allergies:</b> {{$data4->allergies}}<br>
+                          <b>Emergency Contact Person:</b> {{$data4->e_contact}}<br>
+                          <b>Emergency Contact Number:</b> {{$data4->e_number}}<br>
+                          <b>Medication: {{$data4->medication}}
+                        </center></div>
+                        </div>
+                    </div>
+                </div>
+              </td>
+              </center>
             @endif
             @endforeach
             @endif
             @endforeach
             @endif
+            </table>
             </div>
             <!-- End Tab 3 -->
 
@@ -143,5 +187,3 @@
   </div>
 </div>
 @endsection
-
-
