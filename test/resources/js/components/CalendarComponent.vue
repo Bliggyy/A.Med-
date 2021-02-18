@@ -3,47 +3,49 @@
     <div class="row justify-content-center">
       <div class="col-md-8">
         <form @submit.prevent>
-          <div class="form-group">
-            <label for="specialization">Specialization</label>
-            <select class="form-control" name="specialization" v-model="specialization" required>
-              <option selected disabled>Select Specialization</option>
-              <option value="Cardiologist">Cardiologist</option>
-              <option value="Audiologist">Audiologist</option>
-              <option value="ENT specialist">ENT specialist</option>
-              <option value="Gynaecologist">Gynaecologist</option>
-              <option value="Orthopaedic surgeon">Orthopaedic surgeon</option>
-              <option value="Paediatrician">Paediatrician</option>
-              <option value="Psychiatrists">Psychiatrists</option>
-              <option value="Radiologist">Radiologist</option>
-              <option value="Pulmonologist">Pulmonologist</option>
-              <option value="Endocrinologist">Endocrinologist</option>
-              <option value="Oncologist">Oncologist</option>
-              <option value="Neurologist">Neurologist</option>
-              <option value="Cardiothoracic surgeon">Cardiothoracic surgeon</option>
-            </select>
+          <div v-if="$props.acc_type == 'patient'">
+            <div class="form-group">
+              <label for="specialization">Specialization</label>
+              <select class="form-control" name="specialization" v-model="specialization" required>
+                <option selected disabled>Select Specialization</option>
+                <option value="Cardiologist">Cardiologist</option>
+                <option value="Audiologist">Audiologist</option>
+                <option value="ENT specialist">ENT specialist</option>
+                <option value="Gynaecologist">Gynaecologist</option>
+                <option value="Orthopaedic surgeon">Orthopaedic surgeon</option>
+                <option value="Paediatrician">Paediatrician</option>
+                <option value="Psychiatrists">Psychiatrists</option>
+                <option value="Radiologist">Radiologist</option>
+                <option value="Pulmonologist">Pulmonologist</option>
+                <option value="Endocrinologist">Endocrinologist</option>
+                <option value="Oncologist">Oncologist</option>
+                <option value="Neurologist">Neurologist</option>
+                <option value="Cardiothoracic surgeon">Cardiothoracic surgeon</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="doctors">Doctor List</label>
+              <select class="form-control" name="doctor_list" v-model="newEvent.doc_id" :disabled="docListActivated == 1" required>
+                <option selected disabled>Choose a doctor</option>
+                <option v-for="doctor in doctor_List" :key="doctor.id" :value="doctor.doc_id" @click="getDocEvent">{{ doctor.lname }}, {{ doctor.fname }}</option>
+              </select>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="doctors">Doctor List</label>
-            <select class="form-control" name="doctor_list" v-model="newEvent.doc_id" :disabled="docListActivated == 1" required>
-              <option selected disabled>Choose a doctor</option>
-              <option v-for="doctor in doctor_List" :key="doctor.id" :value="doctor.doc_id" @click="getDocEvent">{{ doctor.lname }}, {{ doctor.fname }}</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="title">Appointment Name</label>
+          <div class="form-group" v-if="$props.acc_type == 'doctor'">
+            <label for="title">Patient Name</label>
             <input type="text" id="title" class="form-control" v-model="newEvent.title" required>
           </div>
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <label for="start">Date</label>
-                <input type="date" id="start" class="form-control" v-model="newEvent.start" required>
+                <input type="date" id="start" class="form-control" v-model="newEvent.start">
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
                 <label for="startTime">Time</label>
-                <input type="time" id="startTime" class="form-control" v-model="newEvent.startTime" required>
+                <input type="time" id="startTime" class="form-control" v-model="newEvent.startTime">
               </div>
             </div>
             <div class="col-md-6 mb-4" v-if="addingMode">
@@ -114,6 +116,10 @@ export default {
           specialization: ""
         }
       ],
+      UserDetails: {
+        fname: "",
+        lname: ""
+      },
       specialization: "",
       addingMode: true,
       indexToUpdate: ""
@@ -122,9 +128,18 @@ export default {
   mounted() {
     this.docList();
     this.getEvents();
+    if (this.$props.acc_type == "patient") {
+      this.getUserDetails();
+    }
+    if (this.$props.acc_type == "doctor") {
+      this.getDocEvent();
+    }
   },
   methods: {
     addNewEvent() {
+      if (this.$props.acc_type == "doctor") {
+        this.newEvent.doc_id = this.$props.id
+      }
       if (this.overlap() != true) {
         axios
         .post("/api/appointment", {
@@ -214,9 +229,30 @@ export default {
         .then(response => (this.allEvents = response.data.data))
         .catch(err => console.log(err.response.data));
     },
+    getUserDetails() {
+      axios
+        .get("api/list/" + this.$props.id)
+        .then(response => {
+          this.UserDetails = response.data.data;
+          this.newEvent.title = this.UserDetails[0].fname;
+        })
+        .catch(err =>
+          console.log("Unable to get user data!", err.response.data)
+        );
+    },
     getDocEvent(arg) { // fetches all events related to said doctor
       this.addingMode = true;
-      axios
+      if (this.$props.acc_type == "doctor") {
+        axios
+        .get("/api/appointment/" + this.$props.id)
+          .then(response => {
+            //this.resetForm();
+            this.calendarOptions.events = {};
+            this.calendarOptions.events = response.data.data;
+          })
+          .catch(err => console.log(err.response.data));
+      } else {
+        axios
         .get("/api/appointment/" + this.newEvent.doc_id)
           .then(response => {
             //this.resetForm();
@@ -224,6 +260,8 @@ export default {
             this.calendarOptions.events = response.data.data;
           })
           .catch(err => console.log(err.response.data));
+      }
+      
     },
     docList() { // gets all doctors
       axios
@@ -247,7 +285,7 @@ export default {
       let time = end.toString().split(' ')[4];
       let endTime = this.newEvent.start + ' ' + time;
       for (i in array) {
-        if (this.$props.id == array[i].user_id) {
+        if (this.$props.id == array[i].user_id || array[i].doc_id == this.newEvent.doc_id) {
           if (startTime >= array[i].start && startTime < array[i].end) {
             return true;
           } else if (endTime > array[i].start && endTime <= array[i].end) {
@@ -267,7 +305,7 @@ export default {
       let endTime = this.newEvent.start + ' ' + time;
       for (i in array) {
         if (array[i].id != this.indexToUpdate) {
-          if (this.$props.id == array[i].user_id) {
+          if (this.$props.id == array[i].user_id || array[i].doc_id == this.newEvent.doc_id) {
             if (startTime >= array[i].start && startTime < array[i].end) {
               return true;
             } else if (endTime > array[i].start && endTime <= array[i].end) {

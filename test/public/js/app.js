@@ -19389,6 +19389,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 
 
@@ -19433,6 +19435,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         lname: "",
         specialization: ""
       }],
+      UserDetails: {
+        fname: "",
+        lname: ""
+      },
       specialization: "",
       addingMode: true,
       indexToUpdate: ""
@@ -19441,10 +19447,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   mounted: function mounted() {
     this.docList();
     this.getEvents();
+
+    if (this.$props.acc_type == "patient") {
+      this.getUserDetails();
+    }
+
+    if (this.$props.acc_type == "doctor") {
+      this.getDocEvent();
+    }
   },
   methods: {
     addNewEvent: function addNewEvent() {
       var _this = this;
+
+      if (this.$props.acc_type == "doctor") {
+        this.newEvent.doc_id = this.$props.id;
+      }
 
       if (this.overlap() != true) {
         axios__WEBPACK_IMPORTED_MODULE_5___default.a.post("/api/appointment", _objectSpread(_objectSpread({}, this.newEvent), this.$props)).then(function (data) {
@@ -19547,36 +19565,57 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         return console.log(err.response.data);
       });
     },
-    getDocEvent: function getDocEvent(arg) {
+    getUserDetails: function getUserDetails() {
       var _this5 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_5___default.a.get("api/list/" + this.$props.id).then(function (response) {
+        _this5.UserDetails = response.data.data;
+        _this5.newEvent.title = _this5.UserDetails[0].fname;
+      })["catch"](function (err) {
+        return console.log("Unable to get user data!", err.response.data);
+      });
+    },
+    getDocEvent: function getDocEvent(arg) {
+      var _this6 = this;
 
       // fetches all events related to said doctor
       this.addingMode = true;
-      axios__WEBPACK_IMPORTED_MODULE_5___default.a.get("/api/appointment/" + this.newEvent.doc_id).then(function (response) {
-        //this.resetForm();
-        _this5.calendarOptions.events = {};
-        _this5.calendarOptions.events = response.data.data;
-      })["catch"](function (err) {
-        return console.log(err.response.data);
-      });
+
+      if (this.$props.acc_type == "doctor") {
+        axios__WEBPACK_IMPORTED_MODULE_5___default.a.get("/api/appointment/" + this.$props.id).then(function (response) {
+          //this.resetForm();
+          _this6.calendarOptions.events = {};
+          _this6.calendarOptions.events = response.data.data;
+        })["catch"](function (err) {
+          return console.log(err.response.data);
+        });
+      } else {
+        axios__WEBPACK_IMPORTED_MODULE_5___default.a.get("/api/appointment/" + this.newEvent.doc_id).then(function (response) {
+          //this.resetForm();
+          _this6.calendarOptions.events = {};
+          _this6.calendarOptions.events = response.data.data;
+        })["catch"](function (err) {
+          return console.log(err.response.data);
+        });
+      }
     },
     docList: function docList() {
-      var _this6 = this;
+      var _this7 = this;
 
       // gets all doctors
       axios__WEBPACK_IMPORTED_MODULE_5___default.a.get("api/list").then(function (response) {
-        return _this6.doctorList = response.data.data;
+        return _this7.doctorList = response.data.data;
       })["catch"](function (err) {
         return console.log(err.response.data);
       });
     },
     resetForm: function resetForm() {
-      var _this7 = this;
+      var _this8 = this;
 
       // clears all input fields
       Object.keys(this.newEvent).forEach(function (key) {
-        if (_this7.newEvent[key] != _this7.newEvent.doc_id) {
-          return _this7.newEvent[key] = "";
+        if (_this8.newEvent[key] != _this8.newEvent.doc_id) {
+          return _this8.newEvent[key] = "";
         }
       });
     },
@@ -19591,7 +19630,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var endTime = this.newEvent.start + ' ' + time;
 
       for (i in array) {
-        if (this.$props.id == array[i].user_id) {
+        if (this.$props.id == array[i].user_id || array[i].doc_id == this.newEvent.doc_id) {
           if (startTime >= array[i].start && startTime < array[i].end) {
             return true;
           } else if (endTime > array[i].start && endTime <= array[i].end) {
@@ -19614,7 +19653,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       for (i in array) {
         if (array[i].id != this.indexToUpdate) {
-          if (this.$props.id == array[i].user_id) {
+          if (this.$props.id == array[i].user_id || array[i].doc_id == this.newEvent.doc_id) {
             if (startTime >= array[i].start && startTime < array[i].end) {
               return true;
             } else if (endTime > array[i].start && endTime <= array[i].end) {
@@ -24176,7 +24215,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* @import \"~@fullcalendar/core/main.css\";\r\n@import \"~@fullcalendar/daygrid/main.css\"; */\n.fc-title {\r\n  color: #fff;\n}\n.fc-title:hover {\r\n  cursor: pointer;\n}\r\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* @import \"~@fullcalendar/core/main.css\";\r\n@import \"~@fullcalendar/daygrid/main.css\"; */\n.fc-title {\r\n  color: #fff;\n}\n.fc-title:hover {\r\n  cursor: pointer;\n}\r\n", ""]);
 
 // exports
 
@@ -70345,194 +70384,210 @@ var render = function() {
             }
           },
           [
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "specialization" } }, [
-                _vm._v("Specialization")
-              ]),
-              _vm._v(" "),
-              _c(
-                "select",
-                {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.specialization,
-                      expression: "specialization"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: { name: "specialization", required: "" },
-                  on: {
-                    change: function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.specialization = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    }
-                  }
-                },
-                [
-                  _c("option", { attrs: { selected: "", disabled: "" } }, [
-                    _vm._v("Select Specialization")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "Cardiologist" } }, [
-                    _vm._v("Cardiologist")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "Audiologist" } }, [
-                    _vm._v("Audiologist")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "ENT specialist" } }, [
-                    _vm._v("ENT specialist")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "Gynaecologist" } }, [
-                    _vm._v("Gynaecologist")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "Orthopaedic surgeon" } }, [
-                    _vm._v("Orthopaedic surgeon")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "Paediatrician" } }, [
-                    _vm._v("Paediatrician")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "Psychiatrists" } }, [
-                    _vm._v("Psychiatrists")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "Radiologist" } }, [
-                    _vm._v("Radiologist")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "Pulmonologist" } }, [
-                    _vm._v("Pulmonologist")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "Endocrinologist" } }, [
-                    _vm._v("Endocrinologist")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "Oncologist" } }, [
-                    _vm._v("Oncologist")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "Neurologist" } }, [
-                    _vm._v("Neurologist")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "Cardiothoracic surgeon" } }, [
-                    _vm._v("Cardiothoracic surgeon")
-                  ])
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "doctors" } }, [
-                _vm._v("Doctor List")
-              ]),
-              _vm._v(" "),
-              _c(
-                "select",
-                {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.newEvent.doc_id,
-                      expression: "newEvent.doc_id"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: {
-                    name: "doctor_list",
-                    disabled: _vm.docListActivated == 1,
-                    required: ""
-                  },
-                  on: {
-                    change: function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.$set(
-                        _vm.newEvent,
-                        "doc_id",
-                        $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      )
-                    }
-                  }
-                },
-                [
-                  _c("option", { attrs: { selected: "", disabled: "" } }, [
-                    _vm._v("Choose a doctor")
-                  ]),
-                  _vm._v(" "),
-                  _vm._l(_vm.doctor_List, function(doctor) {
-                    return _c(
-                      "option",
+            _vm.$props.acc_type == "patient"
+              ? _c("div", [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { attrs: { for: "specialization" } }, [
+                      _vm._v("Specialization")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "select",
                       {
-                        key: doctor.id,
-                        domProps: { value: doctor.doc_id },
-                        on: { click: _vm.getDocEvent }
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.specialization,
+                            expression: "specialization"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { name: "specialization", required: "" },
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.specialization = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          }
+                        }
                       },
                       [
-                        _vm._v(
-                          _vm._s(doctor.lname) + ", " + _vm._s(doctor.fname)
+                        _c(
+                          "option",
+                          { attrs: { selected: "", disabled: "" } },
+                          [_vm._v("Select Specialization")]
+                        ),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "Cardiologist" } }, [
+                          _vm._v("Cardiologist")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "Audiologist" } }, [
+                          _vm._v("Audiologist")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "ENT specialist" } }, [
+                          _vm._v("ENT specialist")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "Gynaecologist" } }, [
+                          _vm._v("Gynaecologist")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "option",
+                          { attrs: { value: "Orthopaedic surgeon" } },
+                          [_vm._v("Orthopaedic surgeon")]
+                        ),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "Paediatrician" } }, [
+                          _vm._v("Paediatrician")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "Psychiatrists" } }, [
+                          _vm._v("Psychiatrists")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "Radiologist" } }, [
+                          _vm._v("Radiologist")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "Pulmonologist" } }, [
+                          _vm._v("Pulmonologist")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "Endocrinologist" } }, [
+                          _vm._v("Endocrinologist")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "Oncologist" } }, [
+                          _vm._v("Oncologist")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "Neurologist" } }, [
+                          _vm._v("Neurologist")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "option",
+                          { attrs: { value: "Cardiothoracic surgeon" } },
+                          [_vm._v("Cardiothoracic surgeon")]
                         )
                       ]
                     )
-                  })
-                ],
-                2
-              )
-            ]),
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { attrs: { for: "doctors" } }, [
+                      _vm._v("Doctor List")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.newEvent.doc_id,
+                            expression: "newEvent.doc_id"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: {
+                          name: "doctor_list",
+                          disabled: _vm.docListActivated == 1,
+                          required: ""
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.$set(
+                              _vm.newEvent,
+                              "doc_id",
+                              $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            )
+                          }
+                        }
+                      },
+                      [
+                        _c(
+                          "option",
+                          { attrs: { selected: "", disabled: "" } },
+                          [_vm._v("Choose a doctor")]
+                        ),
+                        _vm._v(" "),
+                        _vm._l(_vm.doctor_List, function(doctor) {
+                          return _c(
+                            "option",
+                            {
+                              key: doctor.id,
+                              domProps: { value: doctor.doc_id },
+                              on: { click: _vm.getDocEvent }
+                            },
+                            [
+                              _vm._v(
+                                _vm._s(doctor.lname) +
+                                  ", " +
+                                  _vm._s(doctor.fname)
+                              )
+                            ]
+                          )
+                        })
+                      ],
+                      2
+                    )
+                  ])
+                ])
+              : _vm._e(),
             _vm._v(" "),
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", { attrs: { for: "title" } }, [
-                _vm._v("Appointment Name")
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.newEvent.title,
-                    expression: "newEvent.title"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { type: "text", id: "title", required: "" },
-                domProps: { value: _vm.newEvent.title },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+            _vm.$props.acc_type == "doctor"
+              ? _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "title" } }, [
+                    _vm._v("Patient Name")
+                  ]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.newEvent.title,
+                        expression: "newEvent.title"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "text", id: "title", required: "" },
+                    domProps: { value: _vm.newEvent.title },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.newEvent, "title", $event.target.value)
+                      }
                     }
-                    _vm.$set(_vm.newEvent, "title", $event.target.value)
-                  }
-                }
-              })
-            ]),
+                  })
+                ])
+              : _vm._e(),
             _vm._v(" "),
             _c(
               "div",
@@ -70552,7 +70607,7 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: { type: "date", id: "start", required: "" },
+                      attrs: { type: "date", id: "start" },
                       domProps: { value: _vm.newEvent.start },
                       on: {
                         input: function($event) {
@@ -70582,7 +70637,7 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: { type: "time", id: "startTime", required: "" },
+                      attrs: { type: "time", id: "startTime" },
                       domProps: { value: _vm.newEvent.startTime },
                       on: {
                         input: function($event) {

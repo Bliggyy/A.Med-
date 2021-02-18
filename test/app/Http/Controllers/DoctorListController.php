@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\DoctorList;
 use App\Http\Resources\DoctorListResource;
 use App\Models\Docprofile;
+use App\Models\Pprofile;
+use App\Http\Resources\UserDetails;
 
 class DoctorListController extends Controller
 {
@@ -48,7 +50,7 @@ class DoctorListController extends Controller
      */
     public function show($id)
     {
-        //
+        return UserDetails::collection(Pprofile::where('p_id', $id)->get());
     }
 
     /**

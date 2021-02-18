@@ -40,8 +40,8 @@ class CalendarController extends Controller
         $request->end = date('Y-m-d', strtotime("$request->start"));
         $request->endTime = date('H:i:s', strtotime("$request->startTime + 30 minutes"));
         $new_event = new Appointments([
-            'title' => $request->input('title'),
-            'doc_id' => $request->input('doc_id'),
+            'title' => $request->title,
+            'doc_id' => $request->doc_id,
             'user_id' => $request->id,
             'start' => date('Y-m-d H:i:s', strtotime("$request->start $request->startTime")),
             'end' => date('Y-m-d H:i:s', strtotime("$request->end $request->endTime"))
