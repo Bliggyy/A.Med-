@@ -11,15 +11,18 @@ notified if a patient user has booked an appointment
 - properly set up the doctor verification so that the doctor is not yet "registered"
 after clicking on the register button and instead sent to a screen that tells them
 to wait for their account to be verified
-- change the calendar so users can add an appointment with a click on a date on the calendar
 - add styling to the profiles
 - add deletion/disabling of accounts
 - create an appointment list for both doctors and patients and as well as a history of 
 past appointments
-- make adjustments to the appointment system
-  - the error code, most prefrerably show the time slots that are available after an error
 - fix bugs
 - create a modal that shows error/success messages instead of the usual alert messages shown in javascript
+
+For the calendar specifically:
+- change the calendar so users can add an appointment with a click on a date on the calendar
+- create a system where the doctor can add patients and those patients will be under him and when he makes an appointment he can select a patient based on the patients that are under him
+- make adjustments to the appointment system
+  - the error code, most prefrerably show the time slots that are available after an error
 
 How to install files and all dependencies:
 - create a db called **a.med**
